@@ -45,5 +45,7 @@ void RegisterUserMessages()
 
 	// Used to send a sample HUD message
 	usermessages->Register( "GameMessage", -1 );
+
+	usermessages->Register("Rumble", 3);	// Send a rumble to a controller
 }
 
