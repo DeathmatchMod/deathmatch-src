@@ -6,10 +6,10 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "sdk_gamerules.h"
+#include "dmo_gamerules.h"
 #include "ammodef.h"
 #include "KeyValues.h"
-#include "weapon_sdkbase.h"
+#include "dmo_weapon_base.h"
 
 
 #ifdef CLIENT_DLL
@@ -32,39 +32,39 @@ LINK_ENTITY_TO_CLASS(info_player_terrorist, CPointEntity);
 LINK_ENTITY_TO_CLASS(info_player_counterterrorist,CPointEntity);
 #endif
 
-REGISTER_GAMERULES_CLASS( CSDKGameRules );
+REGISTER_GAMERULES_CLASS( CDMOGameRules );
 
 
-BEGIN_NETWORK_TABLE_NOBASE( CSDKGameRules, DT_SDKGameRules )
+BEGIN_NETWORK_TABLE_NOBASE( CDMOGameRules, DT_DMOGameRules )
 END_NETWORK_TABLE()
 
 
-LINK_ENTITY_TO_CLASS( sdk_gamerules, CSDKGameRulesProxy );
-IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
+LINK_ENTITY_TO_CLASS( sdk_gamerules, CDMOGameRulesProxy );
+IMPLEMENT_NETWORKCLASS_ALIASED( DMOGameRulesProxy, DT_DMOGameRulesProxy )
 
 
 #ifdef CLIENT_DLL
-	void RecvProxy_SDKGameRules( const RecvProp *pProp, void **pOut, void *pData, int objectID )
+	void RecvProxy_DMOGameRules( const RecvProp *pProp, void **pOut, void *pData, int objectID )
 	{
-		CSDKGameRules *pRules = SDKGameRules();
+		CDMOGameRules *pRules = DMOGameRules();
 		Assert( pRules );
 		*pOut = pRules;
 	}
 
-	BEGIN_RECV_TABLE( CSDKGameRulesProxy, DT_SDKGameRulesProxy )
-		RecvPropDataTable( "sdk_gamerules_data", 0, 0, &REFERENCE_RECV_TABLE( DT_SDKGameRules ), RecvProxy_SDKGameRules )
+	BEGIN_RECV_TABLE( CDMOGameRulesProxy, DT_DMOGameRulesProxy )
+		RecvPropDataTable( "sdk_gamerules_data", 0, 0, &REFERENCE_RECV_TABLE( DT_DMOGameRules ), RecvProxy_DMOGameRules )
 	END_RECV_TABLE()
 #else
-	void *SendProxy_SDKGameRules( const SendProp *pProp, const void *pStructBase, const void *pData, CSendProxyRecipients *pRecipients, int objectID )
+	void *SendProxy_DMOGameRules( const SendProp *pProp, const void *pStructBase, const void *pData, CSendProxyRecipients *pRecipients, int objectID )
 	{
-		CSDKGameRules *pRules = SDKGameRules();
+		CDMOGameRules *pRules = DMOGameRules();
 		Assert( pRules );
 		pRecipients->SetAllRecipients();
 		return pRules;
 	}
 
-	BEGIN_SEND_TABLE( CSDKGameRulesProxy, DT_SDKGameRulesProxy )
-		SendPropDataTable( "sdk_gamerules_data", 0, &REFERENCE_SEND_TABLE( DT_SDKGameRules ), SendProxy_SDKGameRules )
+	BEGIN_SEND_TABLE( CDMOGameRulesProxy, DT_DMOGameRulesProxy )
+		SendPropDataTable( "sdk_gamerules_data", 0, &REFERENCE_SEND_TABLE( DT_DMOGameRules ), SendProxy_DMOGameRules )
 	END_SEND_TABLE()
 #endif
 
@@ -81,7 +81,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
 	class CVoiceGameMgrHelper : public IVoiceGameMgrHelper
 	{
 	public:
-		virtual bool		CanPlayerHearPlayer( CBasePlayer *pListener, CBasePlayer *pTalker )
+		virtual bool		CanPlayerHearPlayer( CBasePlayer *pListener, CBasePlayer *pTalker, bool& bProximity)
 		{
 			// Dead players can only be heard by other dead team mates
 			if ( pTalker->IsAlive() == false )
@@ -118,17 +118,17 @@ IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
 	// Global helper functions.
 	// --------------------------------------------------------------------------------------------------- //
 	
-	// World.cpp calls this but we don't use it in SDK.
+	// World.cpp calls this but we don't use it in DMO.
 	void InitBodyQue()
 	{
 	}
 
 
 	// --------------------------------------------------------------------------------------------------- //
-	// CSDKGameRules implementation.
+	// CDMOGameRules implementation.
 	// --------------------------------------------------------------------------------------------------- //
 
-	CSDKGameRules::CSDKGameRules()
+	CDMOGameRules::CDMOGameRules()
 	{
 		// Create the team managers
 		for ( int i = 0; i < ARRAYSIZE( sTeamNames ); i++ )
@@ -143,7 +143,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
 	//-----------------------------------------------------------------------------
 	// Purpose: 
 	//-----------------------------------------------------------------------------
-	CSDKGameRules::~CSDKGameRules()
+	CDMOGameRules::~CDMOGameRules()
 	{
 		// Note, don't delete each team since they are in the gEntList and will 
 		// automatically be deleted from there, instead.
@@ -155,7 +155,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
 	// Input  :
 	// Output :
 	//-----------------------------------------------------------------------------
-	bool CSDKGameRules::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
+	bool CDMOGameRules::ClientCommand( CBaseEntity *pEdict, const CCommand &args )
 	{
 		return BaseClass::ClientCommand( pEdict, args );
 	}
@@ -164,13 +164,13 @@ IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
 	// Purpose: Player has just spawned. Equip them.
 	//-----------------------------------------------------------------------------
 
-	void CSDKGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore )
+	void CDMOGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore )
 	{
 		RadiusDamage( info, vecSrcIn, flRadius, iClassIgnore, false );
 	}
 
 	// Add the ability to ignore the world trace
-	void CSDKGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, bool bIgnoreWorld )
+	void CDMOGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, bool bIgnoreWorld )
 	{
 		CBaseEntity *pEntity = NULL;
 		trace_t		tr;
@@ -279,7 +279,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
 		}
 	}
 
-	void CSDKGameRules::Think()
+	void CDMOGameRules::Think()
 	{
 		BaseClass::Think();
 	}
@@ -287,12 +287,12 @@ IMPLEMENT_NETWORKCLASS_ALIASED( SDKGameRulesProxy, DT_SDKGameRulesProxy )
 #endif
 
 
-bool CSDKGameRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
+bool CDMOGameRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 {
 	if ( collisionGroup0 > collisionGroup1 )
 	{
 		// swap so that lowest is always first
-		swap(collisionGroup0,collisionGroup1);
+		V_swap(collisionGroup0,collisionGroup1);
 	}
 	
 	//Don't stand on COLLISION_GROUP_WEAPON
@@ -342,7 +342,7 @@ CAmmoDef* GetAmmoDef()
 
 #ifndef CLIENT_DLL
 
-const char *CSDKGameRules::GetChatPrefix( bool bTeamOnly, CBasePlayer *pPlayer )
+const char *CDMOGameRules::GetChatPrefix( bool bTeamOnly, CBasePlayer *pPlayer )
 {
 	return "(chat prefix)";
 }
@@ -352,7 +352,7 @@ const char *CSDKGameRules::GetChatPrefix( bool bTeamOnly, CBasePlayer *pPlayer )
 //-----------------------------------------------------------------------------
 // Purpose: Find the relationship between players (teamplay vs. deathmatch)
 //-----------------------------------------------------------------------------
-int CSDKGameRules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget )
+int CDMOGameRules::PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget )
 {
 #ifndef CLIENT_DLL
 	// half life multiplay has a simple concept of Player Relationships.

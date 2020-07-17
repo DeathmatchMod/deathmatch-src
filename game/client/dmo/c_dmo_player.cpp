@@ -5,12 +5,12 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "c_sdk_player.h"
-#include "weapon_sdkbase.h"
+#include "c_dmo_player.h"
+#include "dmo_weapon_base.h"
 #include "c_basetempentity.h"
 
-#if defined( CSDKPlayer )
-	#undef CSDKPlayer
+#if defined( CDMOPlayer )
+	#undef CDMOPlayer
 #endif
 
 
@@ -29,7 +29,7 @@ public:
 	virtual void PostDataUpdate( DataUpdateType_t updateType )
 	{
 		// Create the effect.
-		C_SDKPlayer *pPlayer = dynamic_cast< C_SDKPlayer* >( m_hPlayer.Get() );
+		C_DMOPlayer *pPlayer = dynamic_cast< C_DMOPlayer* >( m_hPlayer.Get() );
 		if ( pPlayer && !pPlayer->IsDormant() )
 		{
 			pPlayer->DoAnimationEvent( (PlayerAnimEvent_t)m_iEvent.Get(), m_nData );
@@ -50,32 +50,32 @@ BEGIN_RECV_TABLE_NOBASE( C_TEPlayerAnimEvent, DT_TEPlayerAnimEvent )
 	RecvPropInt( RECVINFO( m_nData ) )
 END_RECV_TABLE()
 
-BEGIN_RECV_TABLE_NOBASE( C_SDKPlayer, DT_SDKLocalPlayerExclusive )
+BEGIN_RECV_TABLE_NOBASE( C_DMOPlayer, DT_DMOLocalPlayerExclusive )
 	RecvPropInt( RECVINFO( m_iShotsFired ) ),
 END_RECV_TABLE()
 
 
-IMPLEMENT_CLIENTCLASS_DT( C_SDKPlayer, DT_SDKPlayer, CSDKPlayer )
-	RecvPropDataTable( "sdklocaldata", 0, 0, &REFERENCE_RECV_TABLE(DT_SDKLocalPlayerExclusive) ),
+IMPLEMENT_CLIENTCLASS_DT( C_DMOPlayer, DT_DMOPlayer, CDMOPlayer )
+	RecvPropDataTable( "sdklocaldata", 0, 0, &REFERENCE_RECV_TABLE(DT_DMOLocalPlayerExclusive) ),
 	RecvPropFloat( RECVINFO( m_angEyeAngles[0] ) ),
 	RecvPropFloat( RECVINFO( m_angEyeAngles[1] ) ),
 	RecvPropInt( RECVINFO( m_iThrowGrenadeCounter ) ),
 	RecvPropEHandle( RECVINFO( m_hRagdoll ) ),
 END_RECV_TABLE()
 
-BEGIN_PREDICTION_DATA( C_SDKPlayer )
+BEGIN_PREDICTION_DATA( C_DMOPlayer )
 	DEFINE_PRED_FIELD( m_flCycle, FIELD_FLOAT, FTYPEDESC_OVERRIDE | FTYPEDESC_PRIVATE | FTYPEDESC_NOERRORCHECK ),
 	DEFINE_PRED_FIELD( m_iShotsFired, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),   
 END_PREDICTION_DATA()
 
-class C_SDKRagdoll : public C_BaseAnimatingOverlay
+class C_DMORagdoll : public C_BaseAnimatingOverlay
 {
 public:
-	DECLARE_CLASS( C_SDKRagdoll, C_BaseAnimatingOverlay );
+	DECLARE_CLASS( C_DMORagdoll, C_BaseAnimatingOverlay );
 	DECLARE_CLIENTCLASS();
 
-	C_SDKRagdoll();
-	~C_SDKRagdoll();
+	C_DMORagdoll();
+	~C_DMORagdoll();
 
 	virtual void OnDataChanged( DataUpdateType_t type );
 
@@ -86,7 +86,7 @@ public:
 
 private:
 
-	C_SDKRagdoll( const C_SDKRagdoll & ) {}
+	C_DMORagdoll( const C_DMORagdoll & ) {}
 
 	void Interp_Copy( C_BaseAnimatingOverlay *pSourceEntity );
 
@@ -101,7 +101,7 @@ private:
 };
 
 
-IMPLEMENT_CLIENTCLASS_DT_NOBASE( C_SDKRagdoll, DT_SDKRagdoll, CSDKRagdoll )
+IMPLEMENT_CLIENTCLASS_DT_NOBASE( C_DMORagdoll, DT_DMORagdoll, CDMORagdoll )
 	RecvPropVector( RECVINFO(m_vecRagdollOrigin) ),
 	RecvPropEHandle( RECVINFO( m_hPlayer ) ),
 	RecvPropInt( RECVINFO( m_nModelIndex ) ),
@@ -111,16 +111,16 @@ IMPLEMENT_CLIENTCLASS_DT_NOBASE( C_SDKRagdoll, DT_SDKRagdoll, CSDKRagdoll )
 END_RECV_TABLE()
 
 
-C_SDKRagdoll::C_SDKRagdoll()
+C_DMORagdoll::C_DMORagdoll()
 {
 }
 
-C_SDKRagdoll::~C_SDKRagdoll()
+C_DMORagdoll::~C_DMORagdoll()
 {
 	PhysCleanupFrictionSounds( this );
 }
 
-void C_SDKRagdoll::Interp_Copy( C_BaseAnimatingOverlay *pSourceEntity )
+void C_DMORagdoll::Interp_Copy( C_BaseAnimatingOverlay *pSourceEntity )
 {
 	if ( !pSourceEntity )
 		return;
@@ -145,7 +145,7 @@ void C_SDKRagdoll::Interp_Copy( C_BaseAnimatingOverlay *pSourceEntity )
 	}
 }
 
-void C_SDKRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
+void C_DMORagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 	IPhysicsObject *pPhysicsObject = VPhysicsGetObject();
 
@@ -178,11 +178,11 @@ void C_SDKRagdoll::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pC
 }
 
 
-void C_SDKRagdoll::CreateRagdoll()
+void C_DMORagdoll::CreateRagdoll()
 {
 	// First, initialize all our data. If we have the player's entity on our client,
 	// then we can make ourselves start out exactly where the player is.
-	C_SDKPlayer *pPlayer = dynamic_cast< C_SDKPlayer* >( m_hPlayer.Get() );
+	C_DMOPlayer *pPlayer = dynamic_cast< C_DMOPlayer* >( m_hPlayer.Get() );
 
 	if ( pPlayer && !pPlayer->IsDormant() )
 	{
@@ -264,7 +264,7 @@ void C_SDKRagdoll::CreateRagdoll()
 }
 
 
-void C_SDKRagdoll::OnDataChanged( DataUpdateType_t type )
+void C_DMORagdoll::OnDataChanged( DataUpdateType_t type )
 {
 	BaseClass::OnDataChanged( type );
 
@@ -274,12 +274,12 @@ void C_SDKRagdoll::OnDataChanged( DataUpdateType_t type )
 	}
 }
 
-IRagdoll* C_SDKRagdoll::GetIRagdoll() const
+IRagdoll* C_DMORagdoll::GetIRagdoll() const
 {
 	return m_pRagdoll;
 }
 
-C_BaseAnimating * C_SDKPlayer::BecomeRagdollOnClient()
+C_BaseAnimating * C_DMOPlayer::BecomeRagdollOnClient()
 {
 	// Let the C_CSRagdoll entity do this.
 	// m_builtRagdoll = true;
@@ -287,11 +287,11 @@ C_BaseAnimating * C_SDKPlayer::BecomeRagdollOnClient()
 }
 
 
-IRagdoll* C_SDKPlayer::GetRepresentativeRagdoll() const
+IRagdoll* C_DMOPlayer::GetRepresentativeRagdoll() const
 {
 	if ( m_hRagdoll.Get() )
 	{
-		C_SDKRagdoll *pRagdoll = (C_SDKRagdoll*)m_hRagdoll.Get();
+		C_DMORagdoll *pRagdoll = (C_DMORagdoll*)m_hRagdoll.Get();
 
 		return pRagdoll->GetIRagdoll();
 	}
@@ -303,8 +303,8 @@ IRagdoll* C_SDKPlayer::GetRepresentativeRagdoll() const
 
 
 
-C_SDKPlayer::C_SDKPlayer() : 
-	m_iv_angEyeAngles( "C_SDKPlayer::m_iv_angEyeAngles" )
+C_DMOPlayer::C_DMOPlayer() : 
+	m_iv_angEyeAngles( "C_DMOPlayer::m_iv_angEyeAngles" )
 {
 	m_PlayerAnimState = CreatePlayerAnimState( this, this, LEGANIM_9WAY, true );
 
@@ -313,19 +313,19 @@ C_SDKPlayer::C_SDKPlayer() :
 }
 
 
-C_SDKPlayer::~C_SDKPlayer()
+C_DMOPlayer::~C_DMOPlayer()
 {
 	m_PlayerAnimState->Release();
 }
 
 
-C_SDKPlayer* C_SDKPlayer::GetLocalSDKPlayer()
+C_DMOPlayer* C_DMOPlayer::GetLocalDMOPlayer()
 {
-	return ToSDKPlayer( C_BasePlayer::GetLocalPlayer() );
+	return ToDMOPlayer( C_BasePlayer::GetLocalPlayer() );
 }
 
 
-const QAngle& C_SDKPlayer::GetRenderAngles()
+const QAngle& C_DMOPlayer::GetRenderAngles()
 {
 	if ( IsRagdoll() )
 	{
@@ -338,11 +338,11 @@ const QAngle& C_SDKPlayer::GetRenderAngles()
 }
 
 
-void C_SDKPlayer::UpdateClientSideAnimation()
+void C_DMOPlayer::UpdateClientSideAnimation()
 {
 	// Update the animation data. It does the local check here so this works when using
 	// a third-person camera (and we don't have valid player angles).
-	if ( this == C_SDKPlayer::GetLocalSDKPlayer() )
+	if ( this == C_DMOPlayer::GetLocalDMOPlayer() )
 		m_PlayerAnimState->Update( EyeAngles()[YAW], m_angEyeAngles[PITCH] );
 	else
 		m_PlayerAnimState->Update( m_angEyeAngles[YAW], m_angEyeAngles[PITCH] );
@@ -351,7 +351,7 @@ void C_SDKPlayer::UpdateClientSideAnimation()
 }
 
 
-void C_SDKPlayer::PostDataUpdate( DataUpdateType_t updateType )
+void C_DMOPlayer::PostDataUpdate( DataUpdateType_t updateType )
 {
 	// C_BaseEntity assumes we're networking the entity's angles, so pretend that it
 	// networked the same value we already have.
@@ -360,7 +360,7 @@ void C_SDKPlayer::PostDataUpdate( DataUpdateType_t updateType )
 	BaseClass::PostDataUpdate( updateType );
 }
 
-void C_SDKPlayer::OnDataChanged( DataUpdateType_t type )
+void C_DMOPlayer::OnDataChanged( DataUpdateType_t type )
 {
 	BaseClass::OnDataChanged( type );
 
@@ -373,7 +373,7 @@ void C_SDKPlayer::OnDataChanged( DataUpdateType_t type )
 }
 
 
-void C_SDKPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
+void C_DMOPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 {
 	if ( event == PLAYERANIMEVENT_THROW_GRENADE )
 	{
@@ -386,7 +386,7 @@ void C_SDKPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 	}
 }
 
-bool C_SDKPlayer::ShouldDraw( void )
+bool C_DMOPlayer::ShouldDraw( void )
 {
 	// If we're dead, our ragdoll will be drawn for us instead.
 	if ( !IsAlive() )
@@ -401,7 +401,7 @@ bool C_SDKPlayer::ShouldDraw( void )
 	return BaseClass::ShouldDraw();
 }
 
-CWeaponSDKBase* C_SDKPlayer::GetActiveSDKWeapon() const
+CWeaponDMOBase* C_DMOPlayer::GetActiveDMOWeapon() const
 {
-	return dynamic_cast< CWeaponSDKBase* >( GetActiveWeapon() );
+	return dynamic_cast< CWeaponDMOBase* >( GetActiveWeapon() );
 }

@@ -5,8 +5,8 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef C_SDK_TEAM_H
-#define C_SDK_TEAM_H
+#ifndef C_DMO_TEAM_H
+#define C_DMO_TEAM_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -21,16 +21,16 @@ class CBaseTechnology;
 //-----------------------------------------------------------------------------
 // Purpose: TF's Team manager
 //-----------------------------------------------------------------------------
-class C_SDKTeam : public C_Team
+class C_DMOTeam : public C_Team
 {
-	DECLARE_CLASS( C_SDKTeam, C_Team );
+	DECLARE_CLASS( C_DMOTeam, C_Team );
 	DECLARE_CLIENTCLASS();
 
 public:
 
-					C_SDKTeam();
-	virtual			~C_SDKTeam();
+					C_DMOTeam();
+	virtual			~C_DMOTeam();
 };
 
 
-#endif // C_SDK_TEAM_H
+#endif // C_DMO_TEAM_H

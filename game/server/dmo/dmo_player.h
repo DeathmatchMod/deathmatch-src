@@ -1,37 +1,37 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Purpose:		Player for SDK Game
+// Purpose:		Player for DMO Game
 //
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef SDK_PLAYER_H
-#define SDK_PLAYER_H
+#ifndef DMO_PLAYER_H
+#define DMO_PLAYER_H
 #pragma once
 
 
 #include "player.h"
 #include "server_class.h"
-#include "sdk_playeranimstate.h"
-#include "sdk_shareddefs.h"
+#include "dmo_playeranimstate.h"
+#include "dmo_shareddefs.h"
 
 
 //=============================================================================
-// >> SDK Game player
+// >> DMO Game player
 //=============================================================================
-class CSDKPlayer : public CBasePlayer, public ISDKPlayerAnimStateHelpers
+class CDMOPlayer : public CBasePlayer, public IDMOPlayerAnimStateHelpers
 {
 public:
-	DECLARE_CLASS( CSDKPlayer, CBasePlayer );
+	DECLARE_CLASS( CDMOPlayer, CBasePlayer );
 	DECLARE_SERVERCLASS();
 	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
 
-	CSDKPlayer();
-	~CSDKPlayer();
+	CDMOPlayer();
+	~CDMOPlayer();
 
-	static CSDKPlayer *CreatePlayer( const char *className, edict_t *ed );
-	static CSDKPlayer* Instance( int iEnt );
+	static CDMOPlayer *CreatePlayer( const char *className, edict_t *ed );
+	static CDMOPlayer* Instance( int iEnt );
 
 	// This passes the event to the client's and server's CPlayerAnimState.
 	void DoAnimationEvent( PlayerAnimEvent_t event, int nData = 0 );
@@ -48,7 +48,7 @@ public:
 	virtual void Event_Killed( const CTakeDamageInfo &info );
 	virtual void LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExitAngles );
 	
-	CWeaponSDKBase* GetActiveSDKWeapon() const;
+	CWeaponDMOBase* GetActiveDMOWeapon() const;
 	virtual void	CreateViewModel( int viewmodelindex = 0 );
 
 	virtual void	CheatImpulseCommands( int iImpulse );
@@ -62,9 +62,9 @@ public:
 
 // In shared code.
 public:
-	// ISDKPlayerAnimState overrides.
-	virtual CWeaponSDKBase* SDKAnim_GetActiveWeapon();
-	virtual bool SDKAnim_CanMove();
+	// IDMOPlayerAnimState overrides.
+	virtual CWeaponDMOBase* DMOAnim_GetActiveWeapon();
+	virtual bool DMOAnim_CanMove();
 	
 
 	void FireBullet( 
@@ -82,20 +82,20 @@ private:
 
 	void CreateRagdollEntity();
 
-	ISDKPlayerAnimState *m_PlayerAnimState;
+	IDMOPlayerAnimState *m_PlayerAnimState;
 };
 
 
-inline CSDKPlayer *ToSDKPlayer( CBaseEntity *pEntity )
+inline CDMOPlayer *ToDMOPlayer( CBaseEntity *pEntity )
 {
 	if ( !pEntity || !pEntity->IsPlayer() )
 		return NULL;
 
 #ifdef _DEBUG
-	Assert( dynamic_cast<CSDKPlayer*>( pEntity ) != 0 );
+	Assert( dynamic_cast<CDMOPlayer*>( pEntity ) != 0 );
 #endif
-	return static_cast< CSDKPlayer* >( pEntity );
+	return static_cast< CDMOPlayer* >( pEntity );
 }
 
 
-#endif	// SDK_PLAYER_H
+#endif	// DMO_PLAYER_H

@@ -8,17 +8,17 @@
 #include "cbase.h"
 #include "in_buttons.h"
 #include "takedamageinfo.h"
-#include "weapon_sdkbase.h"
+#include "dmo_weapon_base.h"
 #include "ammodef.h"
 
 
 #if defined( CLIENT_DLL )
 
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 
 #else
 
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 
 #endif
 
@@ -27,51 +27,15 @@
 // Global functions.
 // ----------------------------------------------------------------------------- //
 
-//--------------------------------------------------------------------------------------------------------
-static const char * s_WeaponAliasInfo[] = 
-{
-	"none",		// WEAPON_NONE
-	"mp5",		// WEAPON_MP5
-	"shotgun",	// WEAPON_SHOTGUN
-	"grenade",	// WEAPON_GRENADE
-	NULL,		// WEAPON_NONE
-};
 
-//--------------------------------------------------------------------------------------------------------
-//
-// Given an alias, return the associated weapon ID
-//
-int AliasToWeaponID( const char *alias )
-{
-	if (alias)
-	{
-		for( int i=0; s_WeaponAliasInfo[i] != NULL; ++i )
-			if (!Q_stricmp( s_WeaponAliasInfo[i], alias ))
-				return i;
-	}
-
-	return WEAPON_NONE;
-}
-
-//--------------------------------------------------------------------------------------------------------
-//
-// Given a weapon ID, return its alias
-//
-const char *WeaponIDToAlias( int id )
-{
-	if ( (id >= WEAPON_MAX) || (id < 0) )
-		return NULL;
-
-	return s_WeaponAliasInfo[id];
-}
 
 // ----------------------------------------------------------------------------- //
-// CWeaponSDKBase tables.
+// CWeaponDMOBase tables.
 // ----------------------------------------------------------------------------- //
 
-IMPLEMENT_NETWORKCLASS_ALIASED( WeaponSDKBase, DT_WeaponSDKBase )
+IMPLEMENT_NETWORKCLASS_ALIASED( WeaponDMOBase, DT_WeaponDMOBase )
 
-BEGIN_NETWORK_TABLE( CWeaponSDKBase, DT_WeaponSDKBase )
+BEGIN_NETWORK_TABLE( CWeaponDMOBase, DT_WeaponDMOBase )
 #ifdef CLIENT_DLL
   
 #else
@@ -82,17 +46,17 @@ BEGIN_NETWORK_TABLE( CWeaponSDKBase, DT_WeaponSDKBase )
 END_NETWORK_TABLE()
 
 #ifdef CLIENT_DLL
-BEGIN_PREDICTION_DATA( CWeaponSDKBase )
+BEGIN_PREDICTION_DATA( CWeaponDMOBase )
 	DEFINE_PRED_FIELD( m_flTimeWeaponIdle, FIELD_FLOAT, FTYPEDESC_OVERRIDE | FTYPEDESC_NOERRORCHECK ),
 END_PREDICTION_DATA()
 #endif
 
-LINK_ENTITY_TO_CLASS( weapon_sdk_base, CWeaponSDKBase );
+LINK_ENTITY_TO_CLASS( weapon_sdk_base, CWeaponDMOBase );
 
 
 #ifdef GAME_DLL
 
-	BEGIN_DATADESC( CWeaponSDKBase )
+	BEGIN_DATADESC( CWeaponDMOBase )
 
 		// New weapon Think and Touch Functions go here..
 
@@ -103,29 +67,29 @@ LINK_ENTITY_TO_CLASS( weapon_sdk_base, CWeaponSDKBase );
 // ----------------------------------------------------------------------------- //
 // CWeaponCSBase implementation. 
 // ----------------------------------------------------------------------------- //
-CWeaponSDKBase::CWeaponSDKBase()
+CWeaponDMOBase::CWeaponDMOBase()
 {
 	SetPredictionEligible( true );
 
 	AddSolidFlags( FSOLID_TRIGGER ); // Nothing collides with these but it gets touches.
 }
 
-const CSDKWeaponInfo &CWeaponSDKBase::GetSDKWpnData() const
+const CDMOWeaponInfo &CWeaponDMOBase::GetDMOWpnData() const
 {
 	const FileWeaponInfo_t *pWeaponInfo = &GetWpnData();
-	const CSDKWeaponInfo *pSDKInfo;
+	const CDMOWeaponInfo *pDMOInfo;
 
 	#ifdef _DEBUG
-		pSDKInfo = dynamic_cast< const CSDKWeaponInfo* >( pWeaponInfo );
-		Assert( pSDKInfo );
+		pDMOInfo = dynamic_cast< const CDMOWeaponInfo* >( pWeaponInfo );
+		Assert( pDMOInfo );
 	#else
-		pSDKInfo = static_cast< const CSDKWeaponInfo* >( pWeaponInfo );
+		pDMOInfo = static_cast< const CDMOWeaponInfo* >( pWeaponInfo );
 	#endif
 
-	return *pSDKInfo;
+	return *pDMOInfo;
 }
 
-bool CWeaponSDKBase::PlayEmptySound()
+bool CWeaponDMOBase::PlayEmptySound()
 {
 	CPASAttenuationFilter filter( this );
 	filter.UsePredictionRules();
@@ -135,16 +99,16 @@ bool CWeaponSDKBase::PlayEmptySound()
 	return 0;
 }
 
-CSDKPlayer* CWeaponSDKBase::GetPlayerOwner() const
+CDMOPlayer* CWeaponDMOBase::GetPlayerOwner() const
 {
-	return dynamic_cast< CSDKPlayer* >( GetOwner() );
+	return dynamic_cast< CDMOPlayer* >( GetOwner() );
 }
 
 #ifdef GAME_DLL
 
-void CWeaponSDKBase::SendReloadEvents()
+void CWeaponDMOBase::SendReloadEvents()
 {
-	CSDKPlayer *pPlayer = dynamic_cast< CSDKPlayer* >( GetOwner() );
+	CDMOPlayer *pPlayer = dynamic_cast< CDMOPlayer* >( GetOwner() );
 	if ( !pPlayer )
 		return;
 

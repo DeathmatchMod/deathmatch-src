@@ -5,7 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
-#include "sdk_team.h"
+#include "dmo_team.h"
 #include "entitylist.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -13,24 +13,24 @@
 
 
 // Datatable
-IMPLEMENT_SERVERCLASS_ST(CSDKTeam, DT_SDKTeam)
+IMPLEMENT_SERVERCLASS_ST(CDMOTeam, DT_DMOTeam)
 END_SEND_TABLE()
 
-LINK_ENTITY_TO_CLASS( sdk_team_manager, CSDKTeam );
+LINK_ENTITY_TO_CLASS( sdk_team_manager, CDMOTeam );
 
 //-----------------------------------------------------------------------------
 // Purpose: Get a pointer to the specified TF team manager
 //-----------------------------------------------------------------------------
-CSDKTeam *GetGlobalSDKTeam( int iIndex )
+CDMOTeam *GetGlobalDMOTeam( int iIndex )
 {
-	return (CSDKTeam*)GetGlobalTeam( iIndex );
+	return (CDMOTeam*)GetGlobalTeam( iIndex );
 }
 
 
 //-----------------------------------------------------------------------------
 // Purpose: Needed because this is an entity, but should never be used
 //-----------------------------------------------------------------------------
-void CSDKTeam::Init( const char *pName, int iNumber )
+void CDMOTeam::Init( const char *pName, int iNumber )
 {
 	BaseClass::Init( pName, iNumber );
 

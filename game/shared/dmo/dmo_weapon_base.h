@@ -4,57 +4,44 @@
 //
 //=============================================================================//
 
-#ifndef WEAPON_SDKBASE_H
-#define WEAPON_SDKBASE_H
+#ifndef WEAPON_DMOBASE_H
+#define WEAPON_DMOBASE_H
 #ifdef _WIN32
 #pragma once
 #endif
 
-#include "sdk_playeranimstate.h"
-#include "sdk_weapon_parse.h"
+#include "dmo_playeranimstate.h"
+#include "dmo_weapon_parse.h"
+#include "dmo_shareddefs.h"
 
 #if defined( CLIENT_DLL )
-	#define CWeaponSDKBase C_WeaponSDKBase
+	#define CWeaponDMOBase C_WeaponDMOBase
 #endif
 
-class CSDKPlayer;
+class CDMOPlayer;
 
 // These are the names of the ammo types that the weapon script files reference.
 #define AMMO_BULLETS			"AMMO_BULLETS"
 #define AMMO_ROCKETS			"AMMO_ROCKETS"
 #define AMMO_GRENADE			"AMMO_GRENADE"
 
-//--------------------------------------------------------------------------------------------------------
-//
-// Weapon IDs for all SDK Game weapons
-//
-typedef enum
-{
-	WEAPON_NONE = 0,
-
-	WEAPON_MP5,
-	WEAPON_SHOTGUN,
-	WEAPON_GRENADE,
-	
-	WEAPON_MAX,		// number of weapons weapon index
-} SDKWeaponID;
 
 typedef enum
 {
 	Primary_Mode = 0,
 	Secondary_Mode,
-} SDKWeaponMode;
+} DMOWeaponMode;
 
 const char *WeaponIDToAlias( int id );
 
-class CWeaponSDKBase : public CBaseCombatWeapon
+class CWeaponDMOBase : public CBaseCombatWeapon
 {
 public:
-	DECLARE_CLASS( CWeaponSDKBase, CBaseCombatWeapon );
+	DECLARE_CLASS( CWeaponDMOBase, CBaseCombatWeapon );
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
 
-	CWeaponSDKBase();
+	CWeaponDMOBase();
 
 	#ifdef GAME_DLL
 		DECLARE_DATADESC();
@@ -62,13 +49,13 @@ public:
 
 	// All predicted weapons need to implement and return true
 	virtual bool	IsPredicted() const { return true; }
-	virtual SDKWeaponID GetWeaponID( void ) const { return WEAPON_NONE; }
+	virtual DMOWeaponID GetWeaponID( void ) const { return WEAPON_NONE; }
 	
-	// Get SDK weapon specific weapon data.
-	CSDKWeaponInfo const	&GetSDKWpnData() const;
+	// Get DMO weapon specific weapon data.
+	CDMOWeaponInfo const	&GetDMOWpnData() const;
 
 	// Get a pointer to the player that owns this weapon
-	CSDKPlayer* GetPlayerOwner() const;
+	CDMOPlayer* GetPlayerOwner() const;
 
 	// override to play custom empty sounds
 	virtual bool PlayEmptySound();
@@ -78,8 +65,8 @@ public:
 #endif
 
 private:
-	CWeaponSDKBase( const CWeaponSDKBase & );
+	CWeaponDMOBase( const CWeaponDMOBase & );
 };
 
 
-#endif // WEAPON_SDKBASE_H
+#endif // WEAPON_DMOBASE_H

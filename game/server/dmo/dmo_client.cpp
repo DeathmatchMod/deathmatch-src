@@ -25,10 +25,10 @@
 #include "shake.h"
 #include "player_resource.h"
 #include "engine/IEngineSound.h"
-#include "sdk_player.h"
-#include "sdk_gamerules.h"
+#include "dmo_player.h"
+#include "dmo_gamerules.h"
 #include "tier0/vprof.h"
-#include "sdk_bot_temp.h"
+#include "dmo_bot_temp.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -39,7 +39,7 @@ extern CBaseEntity *FindPickerEntity( CBasePlayer *pPlayer );
 extern bool			g_fGameOver;
 
 
-void FinishClientPutInServer( CSDKPlayer *pPlayer )
+void FinishClientPutInServer( CDMOPlayer *pPlayer )
 {
 	pPlayer->InitialSpawn();
 	pPlayer->Spawn();
@@ -80,7 +80,7 @@ called each time a player is spawned into the game
 void ClientPutInServer( edict_t *pEdict, const char *playername )
 {
 	// Allocate a CBaseTFPlayer for pev, and call spawn
-	CSDKPlayer *pPlayer = CSDKPlayer::CreatePlayer( "player", pEdict );
+	CDMOPlayer *pPlayer = CDMOPlayer::CreatePlayer( "player", pEdict );
 	pPlayer->SetPlayerName( playername );
 }
 
@@ -90,7 +90,7 @@ void ClientActive( edict_t *pEdict, bool bLoadGame )
 	// Can't load games in CS!
 	Assert( !bLoadGame );
 
-	CSDKPlayer *pPlayer = ToSDKPlayer( CBaseEntity::Instance( pEdict ) );
+	CDMOPlayer *pPlayer = ToDMOPlayer( CBaseEntity::Instance( pEdict ) );
 	FinishClientPutInServer( pPlayer );
 }
 
@@ -160,5 +160,5 @@ void GameStartFrame( void )
 //=========================================================
 void InstallGameRules()
 {
-	CreateGameRulesObject( "CSDKGameRules" );
+	CreateGameRulesObject( "CDMOGameRules" );
 }

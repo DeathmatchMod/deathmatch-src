@@ -28,6 +28,8 @@ $Project "Client (Deathmatch)"
 		$File	"hud_voicestatus.cpp"
 		$File	"$SHARED\predicted_viewmodel.cpp"
 		$File	"$SHARED\predicted_viewmodel.h"
+		$File   "$SHARED\playerclass_info_parse.cpp"
+		$File   "$SHARED\playerclass_info_parse.h"
 		
 		$Folder	"Deathmatch"
 		{

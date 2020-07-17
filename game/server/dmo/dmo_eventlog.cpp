@@ -9,13 +9,13 @@
 #include "../EventLog.h"
 #include "KeyValues.h"
 
-class CSDKEventLog : public CEventLog
+class CDMOEventLog : public CEventLog
 {
 private:
 	typedef CEventLog BaseClass;
 
 public:
-	virtual ~CSDKEventLog() {};
+	virtual ~CDMOEventLog() {};
 
 public:
 	bool PrintEvent( IGameEvent * event )	// override virtual function
@@ -27,7 +27,7 @@ public:
 	
 		if ( Q_strcmp(event->GetName(), "sdk_") == 0 )
 		{
-			return PrintSDKEvent( event );
+			return PrintDMOEvent( event );
 		}
 
 		return false;
@@ -35,7 +35,7 @@ public:
 
 protected:
 
-	bool PrintSDKEvent( IGameEvent * event )	// print Mod specific logs
+	bool PrintDMOEvent( IGameEvent * event )	// print Mod specific logs
 	{
 		//const char * name = event->GetName() + Q_strlen("sdk_"); // remove prefix
 		return false;
@@ -43,13 +43,13 @@ protected:
 
 };
 
-CSDKEventLog g_SDKEventLog;
+CDMOEventLog g_DMOEventLog;
 
 //-----------------------------------------------------------------------------
 // Singleton access
 //-----------------------------------------------------------------------------
 IGameSystem* GameLogSystem()
 {
-	return &g_SDKEventLog;
+	return &g_DMOEventLog;
 }
 

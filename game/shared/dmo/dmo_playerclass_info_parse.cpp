@@ -5,8 +5,8 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "sdk_playerclass_info_parse.h"
-#include "weapon_sdkbase.h"
+#include "dmo_playerclass_info_parse.h"
+#include "dmo_weapon_base.h"
 #include <KeyValues.h>
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -16,16 +16,16 @@
 
 FilePlayerClassInfo_t* CreatePlayerClassInfo()
 {
-#if defined ( SDK_USE_PLAYERCLASSES )
-	return new CSDKPlayerClassInfo;
+#if defined ( DMO_USE_PLAYERCLASSES )
+	return new CDMOPlayerClassInfo;
 #else
 	return new FilePlayerClassInfo_t;
 #endif
 }
 
-#if defined ( SDK_USE_PLAYERCLASSES )
+#if defined ( DMO_USE_PLAYERCLASSES )
 
-CSDKPlayerClassInfo::CSDKPlayerClassInfo()
+CDMOPlayerClassInfo::CDMOPlayerClassInfo()
 {
 	m_iTeam= TEAM_UNASSIGNED;
 	
@@ -40,14 +40,14 @@ CSDKPlayerClassInfo::CSDKPlayerClassInfo()
 	m_iGrenType2 = WEAPON_NONE;
 
 	m_szLimitCvar[0] = '\0';
-	m_flRunSpeed		= SDK_DEFAULT_PLAYER_RUNSPEED;
-	m_flSprintSpeed		= SDK_DEFAULT_PLAYER_RUNSPEED;
-	m_flProneSpeed		= SDK_DEFAULT_PLAYER_RUNSPEED;
+	m_flRunSpeed		= DMO_DEFAULT_PLAYER_RUNSPEED;
+	m_flSprintSpeed		= DMO_DEFAULT_PLAYER_RUNSPEED;
+	m_flProneSpeed		= DMO_DEFAULT_PLAYER_RUNSPEED;
 
 	m_iArmor			= 0;
 }
 
-void CSDKPlayerClassInfo::Parse( KeyValues *pKeyValuesData, const char *szWeaponName )
+void CDMOPlayerClassInfo::Parse( KeyValues *pKeyValuesData, const char *szWeaponName )
 {
 	BaseClass::Parse( pKeyValuesData, szWeaponName );
 
@@ -57,17 +57,17 @@ void CSDKPlayerClassInfo::Parse( KeyValues *pKeyValuesData, const char *szWeapon
 	m_iTeam = TEAM_UNASSIGNED;
 
 //Tony; don't check for teams unless we're using teams. You could do a free for all, but class / character based game if you wanted.
-#ifdef SDK_USE_TEAMS
+#ifdef DMO_USE_TEAMS
 	const char *pTeam = pKeyValuesData->GetString( "team", NULL );
 	if ( pTeam )
 	{
 		if ( Q_stricmp( pTeam, "BLUE" ) == 0 )
 		{
-			m_iTeam = SDK_TEAM_BLUE;
+			m_iTeam = DMO_TEAM_BLUE;
 		}
 		else if ( Q_stricmp( pTeam, "RED" ) == 0 )
 		{
-			m_iTeam = SDK_TEAM_RED;
+			m_iTeam = DMO_TEAM_RED;
 		}
 		else
 		{
@@ -127,11 +127,11 @@ void CSDKPlayerClassInfo::Parse( KeyValues *pKeyValuesData, const char *szWeapon
 	Q_strncpy( m_szClassImage, pKeyValuesData->GetString( "classimage", "white" ), sizeof( m_szClassImage ) );
 	Q_strncpy( m_szClassImageBG, pKeyValuesData->GetString( "classimagebg", "white" ), sizeof( m_szClassImageBG ) );
 
-	m_flRunSpeed		= pKeyValuesData->GetFloat( "RunSpeed", SDK_DEFAULT_PLAYER_RUNSPEED );
-	m_flSprintSpeed		= pKeyValuesData->GetFloat( "SprintSpeed", SDK_DEFAULT_PLAYER_RUNSPEED );
-	m_flProneSpeed		= pKeyValuesData->GetFloat( "ProneSpeed", SDK_DEFAULT_PLAYER_RUNSPEED );
+	m_flRunSpeed		= pKeyValuesData->GetFloat( "RunSpeed", DMO_DEFAULT_PLAYER_RUNSPEED );
+	m_flSprintSpeed		= pKeyValuesData->GetFloat( "SprintSpeed", DMO_DEFAULT_PLAYER_RUNSPEED );
+	m_flProneSpeed		= pKeyValuesData->GetFloat( "ProneSpeed", DMO_DEFAULT_PLAYER_RUNSPEED );
 
 	m_iArmor			= pKeyValuesData->GetInt( "armor", 0 );
 
 }
-#endif // SDK_USE_PLAYERCLASSES
+#endif // DMO_USE_PLAYERCLASSES

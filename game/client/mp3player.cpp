@@ -41,7 +41,7 @@ using namespace vgui;
 // Singleton
 static CMP3Player *g_pPlayer = NULL;
 
-vgui::Panel *GetSDKRootPanel();
+vgui::Panel *GetDMORootPanel();
 
 // Time between songs
 #define END_GAP_TIME	1.0f

@@ -5,8 +5,8 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef SDK_TEAM_H
-#define SDK_TEAM_H
+#ifndef DMO_TEAM_H
+#define DMO_TEAM_H
 
 #ifdef _WIN32
 #pragma once
@@ -20,9 +20,9 @@
 //-----------------------------------------------------------------------------
 // Purpose: Team Manager
 //-----------------------------------------------------------------------------
-class CSDKTeam : public CTeam
+class CDMOTeam : public CTeam
 {
-	DECLARE_CLASS( CSDKTeam, CTeam );
+	DECLARE_CLASS( CDMOTeam, CTeam );
 	DECLARE_SERVERCLASS();
 
 public:
@@ -32,7 +32,7 @@ public:
 };
 
 
-extern CSDKTeam *GetGlobalSDKTeam( int iIndex );
+extern CDMOTeam *GetGlobalDMOTeam( int iIndex );
 
 
 #endif // TF_TEAM_H

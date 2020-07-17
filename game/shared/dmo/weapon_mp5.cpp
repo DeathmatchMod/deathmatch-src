@@ -5,26 +5,26 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "weapon_sdkbase.h"
-#include "sdk_fx_shared.h"
+#include "dmo_weapon_base.h"
+#include "dmo_fx_shared.h"
 
 
 #if defined( CLIENT_DLL )
 
 	#define CWeaponMP5 C_WeaponMP5
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 
 #else
 
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 
 #endif
 
 
-class CWeaponMP5 : public CWeaponSDKBase
+class CWeaponMP5 : public CWeaponDMOBase
 {
 public:
-	DECLARE_CLASS( CWeaponMP5, CWeaponSDKBase );
+	DECLARE_CLASS( CWeaponMP5, CWeaponDMOBase );
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
 	
@@ -35,7 +35,7 @@ public:
 	virtual bool Reload();
 	virtual void WeaponIdle();
 
-	virtual SDKWeaponID GetWeaponID( void ) const		{ return WEAPON_MP5; }
+	virtual DMOWeaponID GetWeaponID( void ) const		{ return DMO_WEAPON_MP5; }
 
 
 private:
@@ -64,7 +64,7 @@ CWeaponMP5::CWeaponMP5()
 
 bool CWeaponMP5::Deploy( )
 {
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 	pPlayer->m_iShotsFired = 0;
 
 	return BaseClass::Deploy();
@@ -72,7 +72,7 @@ bool CWeaponMP5::Deploy( )
 
 bool CWeaponMP5::Reload( )
 {
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 
 	if (pPlayer->GetAmmoCount( GetPrimaryAmmoType() ) <= 0)
 		return false;
@@ -97,8 +97,8 @@ bool CWeaponMP5::Reload( )
 
 void CWeaponMP5::PrimaryAttack( void )
 {
-	const CSDKWeaponInfo &pWeaponInfo = GetSDKWpnData();
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	const CDMOWeaponInfo &pWeaponInfo = GetDMOWpnData();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 
 	float flCycleTime = pWeaponInfo.m_flCycleTime;
 

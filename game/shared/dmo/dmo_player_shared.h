@@ -4,8 +4,8 @@
 //
 //===========================================================================================//
 
-#ifndef SDK_PLAYER_SHARED_H
-#define SDK_PLAYER_SHARED_H
+#ifndef DMO_PLAYER_SHARED_H
+#define DMO_PLAYER_SHARED_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -14,41 +14,41 @@
 #include "weapon_sdkbase.h"
 
 #ifdef CLIENT_DLL
-class C_SDKPlayer;
+class C_DMOPlayer;
 #else
-class CSDKPlayer;
+class CDMOPlayer;
 #endif
 
-class CSDKPlayerShared
+class CDMOPlayerShared
 {
 public:
 
 #ifdef CLIENT_DLL
-	friend class C_SDKPlayer;
-	typedef C_SDKPlayer OuterClass;
+	friend class C_DMOPlayer;
+	typedef C_DMOPlayer OuterClass;
 	DECLARE_PREDICTABLE();
 #else
-	friend class CSDKPlayer;
-	typedef CSDKPlayer OuterClass;
+	friend class CDMOPlayer;
+	typedef CDMOPlayer OuterClass;
 #endif
 
 	DECLARE_EMBEDDED_NETWORKVAR()
-	DECLARE_CLASS_NOBASE( CSDKPlayerShared );
+	DECLARE_CLASS_NOBASE( CDMOPlayerShared );
 
-	CSDKPlayerShared();
-	~CSDKPlayerShared();
+	CDMOPlayerShared();
+	~CDMOPlayerShared();
 
-#if defined ( SDK_USE_STAMINA ) || defined ( SDK_USE_SPRINTING )
+#if defined ( DMO_USE_STAMINA ) || defined ( DMO_USE_SPRINTING )
 	void	SetStamina( float stamina );
 	float	GetStamina( void ) { return m_flStamina; }
-#endif // SDK_USE_STAMINA || SDK_USE_SPRINTING
+#endif // DMO_USE_STAMINA || DMO_USE_SPRINTING
 
 	void	Init( OuterClass *pOuter );
 
 	bool	IsSniperZoomed( void ) const;
 	bool	IsDucking( void ) const; 
 
-#if defined ( SDK_USE_PLAYERCLASSES )
+#if defined ( DMO_USE_PLAYERCLASSES )
 	void	SetDesiredPlayerClass( int playerclass );
 	int		DesiredPlayerClass( void );
 
@@ -56,9 +56,9 @@ public:
 	int		PlayerClass( void );
 #endif
 
-	CWeaponSDKBase* GetActiveSDKWeapon() const;
+	CWeaponDMOBase* GetActiveDMOWeapon() const;
 
-#if defined ( SDK_USE_PRONE )
+#if defined ( DMO_USE_PRONE )
 	void	StartGoingProne( void );
 	void	StandUpFromProne( void );
 	bool	IsProne() const;
@@ -73,7 +73,7 @@ public:
 
 	void	ForceUnzoom( void );
 
-#ifdef SDK_USE_SPRINTING
+#ifdef DMO_USE_SPRINTING
 	bool	IsSprinting( void ) { return m_bIsSprinting; }
 
 	void	SetSprinting( bool bSprinting );
@@ -87,28 +87,28 @@ public:
 
 private:
 
-#if defined ( SDK_USE_PRONE )
+#if defined ( DMO_USE_PRONE )
 	CNetworkVar( bool, m_bProne );
 #endif
 
-#if defined ( SDK_USE_PLAYERCLASSES )
+#if defined ( DMO_USE_PLAYERCLASSES )
 	CNetworkVar( int, m_iPlayerClass );
 	CNetworkVar( int, m_iDesiredPlayerClass );
 #endif
 
 
-#if defined ( SDK_USE_SPRINTING )
+#if defined ( DMO_USE_SPRINTING )
 	CNetworkVar( bool, m_bIsSprinting );
 	bool m_bGaveSprintPenalty;
 #endif
 
-#if defined ( SDK_USE_STAMINA ) || defined ( SDK_USE_SPRINTING )
+#if defined ( DMO_USE_STAMINA ) || defined ( DMO_USE_SPRINTING )
 	CNetworkVar( float, m_flStamina );
-#endif // SDK_USE_STAMINA || SDK_USE_SPRINTING
+#endif // DMO_USE_STAMINA || DMO_USE_SPRINTING
 
 public:
 
-#ifdef SDK_USE_PRONE
+#ifdef DMO_USE_PRONE
 	float m_flNextProneCheck; // Prevent it switching their prone state constantly.
 
 	CNetworkVar( float, m_flUnProneTime );
@@ -133,4 +133,4 @@ private:
 
 
 
-#endif //SDK_PLAYER_SHARED_H
+#endif //DMO_PLAYER_SHARED_H

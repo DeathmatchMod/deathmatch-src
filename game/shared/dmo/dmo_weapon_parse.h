@@ -4,8 +4,8 @@
 //
 //=============================================================================//
 
-#ifndef SDK_WEAPON_PARSE_H
-#define SDK_WEAPON_PARSE_H
+#ifndef DMO_WEAPON_PARSE_H
+#define DMO_WEAPON_PARSE_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -16,12 +16,12 @@
 
 
 //--------------------------------------------------------------------------------------------------------
-class CSDKWeaponInfo : public FileWeaponInfo_t
+class CDMOWeaponInfo : public FileWeaponInfo_t
 {
 public:
-	DECLARE_CLASS_GAMEROOT( CSDKWeaponInfo, FileWeaponInfo_t );
+	DECLARE_CLASS_GAMEROOT( CDMOWeaponInfo, FileWeaponInfo_t );
 	
-	CSDKWeaponInfo();
+	CDMOWeaponInfo();
 	
 	virtual void Parse( ::KeyValues *pKeyValuesData, const char *szWeaponName );
 
@@ -34,4 +34,4 @@ public:
 };
 
 
-#endif // SDK_WEAPON_PARSE_H
+#endif // DMO_WEAPON_PARSE_H

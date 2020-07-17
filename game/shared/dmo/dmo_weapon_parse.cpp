@@ -6,21 +6,21 @@
 
 #include "cbase.h"
 #include <KeyValues.h>
-#include "sdk_weapon_parse.h"
+#include "dmo_weapon_parse.h"
 
 
 FileWeaponInfo_t* CreateWeaponInfo()
 {
-	return new CSDKWeaponInfo;
+	return new CDMOWeaponInfo;
 }
 
 
-CSDKWeaponInfo::CSDKWeaponInfo()
+CDMOWeaponInfo::CDMOWeaponInfo()
 {
 }
 
 
-void CSDKWeaponInfo::Parse( KeyValues *pKeyValuesData, const char *szWeaponName )
+void CDMOWeaponInfo::Parse( KeyValues *pKeyValuesData, const char *szWeaponName )
 {
 	BaseClass::Parse( pKeyValuesData, szWeaponName );
 

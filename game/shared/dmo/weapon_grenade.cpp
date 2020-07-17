@@ -5,7 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "weapon_sdkbase.h"
+#include "dmo_weapon_base.h"
 #include "gamerules.h"
 #include "npcevent.h"
 #include "engine/IEngineSound.h"
@@ -16,24 +16,24 @@
 	
 #else
 
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 	#include "items.h"
-	#include "sdk_basegrenade_projectile.h"
+	#include "dmo_basegrenade_projectile.h"
 
 #endif
 
 
 #define GRENADE_TIMER	3.0f //Seconds
 
-IMPLEMENT_NETWORKCLASS_ALIASED( SDKGrenade, DT_SDKGrenade )
+IMPLEMENT_NETWORKCLASS_ALIASED( DMOGrenade, DT_DMOGrenade )
 
-BEGIN_NETWORK_TABLE(CSDKGrenade, DT_SDKGrenade)
+BEGIN_NETWORK_TABLE(CDMOGrenade, DT_DMOGrenade)
 END_NETWORK_TABLE()
 
-BEGIN_PREDICTION_DATA( CSDKGrenade )
+BEGIN_PREDICTION_DATA( CDMOGrenade )
 END_PREDICTION_DATA()
 
-LINK_ENTITY_TO_CLASS( weapon_grenade, CSDKGrenade );
+LINK_ENTITY_TO_CLASS( weapon_grenade, CDMOGrenade );
 PRECACHE_WEAPON_REGISTER( weapon_grenade );
 
 
@@ -102,10 +102,10 @@ public:
 LINK_ENTITY_TO_CLASS( grenade_projectile, CGrenadeProjectile );
 PRECACHE_WEAPON_REGISTER( grenade_projectile );
 
-BEGIN_DATADESC( CSDKGrenade )
+BEGIN_DATADESC( CDMOGrenade )
 END_DATADESC()
 
-void CSDKGrenade::EmitGrenade( Vector vecSrc, QAngle vecAngles, Vector vecVel, AngularImpulse angImpulse, CBasePlayer *pPlayer )
+void CDMOGrenade::EmitGrenade( Vector vecSrc, QAngle vecAngles, Vector vecVel, AngularImpulse angImpulse, CBasePlayer *pPlayer )
 {
 	CGrenadeProjectile::Create( vecSrc, vecAngles, vecVel, angImpulse, pPlayer, GRENADE_TIMER );
 }

@@ -7,8 +7,8 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef SDK_GAMERULES_H
-#define SDK_GAMERULES_H
+#ifndef DMO_GAMERULES_H
+#define DMO_GAMERULES_H
 
 #ifdef _WIN32
 #pragma once
@@ -27,23 +27,23 @@
 
 
 #ifdef CLIENT_DLL
-	#define CSDKGameRules C_SDKGameRules
-	#define CSDKGameRulesProxy C_SDKGameRulesProxy
+	#define CDMOGameRules C_DMOGameRules
+	#define CDMOGameRulesProxy C_DMOGameRulesProxy
 #endif
 
 
-class CSDKGameRulesProxy : public CGameRulesProxy
+class CDMOGameRulesProxy : public CGameRulesProxy
 {
 public:
-	DECLARE_CLASS( CSDKGameRulesProxy, CGameRulesProxy );
+	DECLARE_CLASS( CDMOGameRulesProxy, CGameRulesProxy );
 	DECLARE_NETWORKCLASS();
 };
 
 
-class CSDKGameRules : public CTeamplayRules
+class CDMOGameRules : public CTeamplayRules
 {
 public:
-	DECLARE_CLASS( CSDKGameRules, CTeamplayRules );
+	DECLARE_CLASS( CDMOGameRules, CTeamplayRules );
 
 	virtual bool	ShouldCollide( int collisionGroup0, int collisionGroup1 );
 
@@ -58,8 +58,8 @@ public:
 
 	DECLARE_SERVERCLASS_NOBASE(); // This makes datatables able to access our private vars.
 	
-	CSDKGameRules();
-	virtual ~CSDKGameRules();
+	CDMOGameRules();
+	virtual ~CDMOGameRules();
 
 	virtual bool ClientCommand( CBaseEntity *pEdict, const CCommand &args );
 	virtual void RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore );
@@ -79,10 +79,10 @@ private:
 // Gets us at the team fortress game rules
 //-----------------------------------------------------------------------------
 
-inline CSDKGameRules* SDKGameRules()
+inline CDMOGameRules* DMOGameRules()
 {
-	return static_cast<CSDKGameRules*>(g_pGameRules);
+	return static_cast<CDMOGameRules*>(g_pGameRules);
 }
 
 
-#endif // SDK_GAMERULES_H
+#endif // DMO_GAMERULES_H

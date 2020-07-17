@@ -31,13 +31,13 @@
 
 // viewport definitions
 #include <baseviewport.h>
-#include "SDKViewport.h"
+#include "DMOViewport.h"
 
 #include "vguicenterprint.h"
 #include "text_message.h"
 
 
-void SDKViewport::ApplySchemeSettings( vgui::IScheme *pScheme )
+void DMOViewport::ApplySchemeSettings( vgui::IScheme *pScheme )
 {
 	BaseClass::ApplySchemeSettings( pScheme );
 
@@ -47,7 +47,7 @@ void SDKViewport::ApplySchemeSettings( vgui::IScheme *pScheme )
 }
 
 
-IViewPortPanel* SDKViewport::CreatePanelByName(const char *szPanelName)
+IViewPortPanel* DMOViewport::CreatePanelByName(const char *szPanelName)
 {
 	IViewPortPanel* newpanel = NULL;
 
@@ -63,12 +63,12 @@ IViewPortPanel* SDKViewport::CreatePanelByName(const char *szPanelName)
 	return newpanel; 
 }
 
-void SDKViewport::CreateDefaultPanels( void )
+void DMOViewport::CreateDefaultPanels( void )
 {
 	BaseClass::CreateDefaultPanels();
 }
 
-int SDKViewport::GetDeathMessageStartHeight( void )
+int DMOViewport::GetDeathMessageStartHeight( void )
 {
 	int x = YRES(2);
 

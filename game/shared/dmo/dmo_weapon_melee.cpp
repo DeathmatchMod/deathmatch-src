@@ -6,19 +6,19 @@
 
 #include "cbase.h"
 
-#include "weapon_sdkbase.h"
-#include "sdk_weapon_melee.h"
+#include "dmo_weapon_base.h"
+#include "dmo_weapon_melee.h"
 
-#include "sdk_gamerules.h"
+#include "dmo_gamerules.h"
 #include "ammodef.h"
 #include "mathlib/mathlib.h"
 #include "in_buttons.h"
 #include "animation.h"
 
 #if defined( CLIENT_DLL )
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 #else
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 	#include "ndebugoverlay.h"
 	#include "te_effect_dispatch.h"
 	#include "ilagcompensationmanager.h"
@@ -27,12 +27,12 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-IMPLEMENT_NETWORKCLASS_ALIASED( WeaponSDKMelee, DT_WeaponSDKMelee )
+IMPLEMENT_NETWORKCLASS_ALIASED( WeaponDMOMelee, DT_WeaponDMOMelee )
 
-BEGIN_NETWORK_TABLE( CWeaponSDKMelee, DT_WeaponSDKMelee )
+BEGIN_NETWORK_TABLE( CWeaponDMOMelee, DT_WeaponDMOMelee )
 END_NETWORK_TABLE()
 
-BEGIN_PREDICTION_DATA( CWeaponSDKMelee )
+BEGIN_PREDICTION_DATA( CWeaponDMOMelee )
 END_PREDICTION_DATA()
 
 #define MELEE_HULL_DIM		16
@@ -43,7 +43,7 @@ static const Vector g_meleeMaxs(MELEE_HULL_DIM,MELEE_HULL_DIM,MELEE_HULL_DIM);
 //-----------------------------------------------------------------------------
 // Constructor
 //-----------------------------------------------------------------------------
-CWeaponSDKMelee::CWeaponSDKMelee()
+CWeaponDMOMelee::CWeaponDMOMelee()
 {
 	m_bFiresUnderwater = true;
 }
@@ -51,7 +51,7 @@ CWeaponSDKMelee::CWeaponSDKMelee()
 //-----------------------------------------------------------------------------
 // Purpose: Spawn the weapon
 //-----------------------------------------------------------------------------
-void CWeaponSDKMelee::Spawn( void )
+void CWeaponDMOMelee::Spawn( void )
 {
 	m_fMinRange1	= 0;
 	m_fMinRange2	= 0;
@@ -64,7 +64,7 @@ void CWeaponSDKMelee::Spawn( void )
 //-----------------------------------------------------------------------------
 // Purpose: Precache the weapon
 //-----------------------------------------------------------------------------
-void CWeaponSDKMelee::Precache( void )
+void CWeaponDMOMelee::Precache( void )
 {
 	//Call base class first
 	BaseClass::Precache();
@@ -73,17 +73,17 @@ void CWeaponSDKMelee::Precache( void )
 //------------------------------------------------------------------------------
 // Purpose : Update weapon
 //------------------------------------------------------------------------------
-void CWeaponSDKMelee::ItemPostFrame( void )
+void CWeaponDMOMelee::ItemPostFrame( void )
 {
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 	if ( pPlayer == NULL )
 		return;
 
-	if ( (pPlayer->m_nButtons & IN_ATTACK) && (m_flNextPrimaryAttack <= gpGlobals->curtime) && pPlayer->CanAttack() )
+	if ( (pPlayer->m_nButtons & IN_ATTACK) && (m_flNextPrimaryAttack <= gpGlobals->curtime) )
 	{
 		PrimaryAttack();
 	} 
-	else if ( (pPlayer->m_nButtons & IN_ATTACK2) && (m_flNextSecondaryAttack <= gpGlobals->curtime) && pPlayer->CanAttack() )
+	else if ( (pPlayer->m_nButtons & IN_ATTACK2) && (m_flNextSecondaryAttack <= gpGlobals->curtime) )
 	{
 		SecondaryAttack();
 	}
@@ -98,11 +98,11 @@ void CWeaponSDKMelee::ItemPostFrame( void )
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-void CWeaponSDKMelee::PrimaryAttack()
+void CWeaponDMOMelee::PrimaryAttack()
 {
 	
 #ifndef CLIENT_DLL
-	CSDKPlayer *pPlayer = ToSDKPlayer( GetPlayerOwner() );
+	CDMOPlayer *pPlayer = ToDMOPlayer( GetPlayerOwner() );
 	// Move other players back to history positions based on local player's lag
 	lagcompensation->StartLagCompensation( pPlayer, pPlayer->GetCurrentCommand() );
 #endif
@@ -119,7 +119,7 @@ void CWeaponSDKMelee::PrimaryAttack()
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-void CWeaponSDKMelee::SecondaryAttack()
+void CWeaponDMOMelee::SecondaryAttack()
 {
 	Swing( true );
 }
@@ -128,9 +128,9 @@ void CWeaponSDKMelee::SecondaryAttack()
 //------------------------------------------------------------------------------
 // Purpose: Implement impact function
 //------------------------------------------------------------------------------
-void CWeaponSDKMelee::Hit( trace_t &traceHit, Activity nHitActivity )
+void CWeaponDMOMelee::Hit( trace_t &traceHit, Activity nHitActivity )
 {
-	CSDKPlayer *pPlayer = ToSDKPlayer( GetOwner() );
+	CDMOPlayer *pPlayer = ToDMOPlayer( GetOwner() );
 	
 	//Do view kick
 //	AddViewKick();
@@ -168,7 +168,7 @@ void CWeaponSDKMelee::Hit( trace_t &traceHit, Activity nHitActivity )
 	ImpactEffect( traceHit );
 }
 
-Activity CWeaponSDKMelee::ChooseIntersectionPointAndActivity( trace_t &hitTrace, const Vector &mins, const Vector &maxs, CSDKPlayer *pOwner )
+Activity CWeaponDMOMelee::ChooseIntersectionPointAndActivity( trace_t &hitTrace, const Vector &mins, const Vector &maxs, CDMOPlayer *pOwner )
 {
 	int			i, j, k;
 	float		distance;
@@ -221,7 +221,7 @@ Activity CWeaponSDKMelee::ChooseIntersectionPointAndActivity( trace_t &hitTrace,
 // Purpose: 
 // Input  : &traceHit - 
 //-----------------------------------------------------------------------------
-bool CWeaponSDKMelee::ImpactWater( const Vector &start, const Vector &end )
+bool CWeaponDMOMelee::ImpactWater( const Vector &start, const Vector &end )
 {
 	//FIXME: This doesn't handle the case of trying to splash while being underwater, but that's not going to look good
 	//		 right now anyway...
@@ -264,7 +264,7 @@ bool CWeaponSDKMelee::ImpactWater( const Vector &start, const Vector &end )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponSDKMelee::ImpactEffect( trace_t &traceHit )
+void CWeaponDMOMelee::ImpactEffect( trace_t &traceHit )
 {
 	// See if we hit water (we don't do the other impact effects in this case)
 	if ( ImpactWater( traceHit.startpos, traceHit.endpos ) )
@@ -279,12 +279,12 @@ void CWeaponSDKMelee::ImpactEffect( trace_t &traceHit )
 // Purpose : Starts the swing of the weapon and determines the animation
 // Input   : bIsSecondary - is this a secondary attack?
 //------------------------------------------------------------------------------
-void CWeaponSDKMelee::Swing( int bIsSecondary )
+void CWeaponDMOMelee::Swing( int bIsSecondary )
 {
 	trace_t traceHit;
 
 	// Try a ray
-	CSDKPlayer *pOwner = ToSDKPlayer( GetOwner() );
+	CDMOPlayer *pOwner = ToDMOPlayer( GetOwner() );
 	if ( !pOwner )
 		return;
 
@@ -354,7 +354,6 @@ void CWeaponSDKMelee::Swing( int bIsSecondary )
 	// Send the anim
 	SendWeaponAnim( nHitActivity );
 
-	pOwner->DoAnimationEvent( PLAYERANIMEVENT_ATTACK_PRIMARY );
 
 	//Setup our next attack times
 	m_flNextPrimaryAttack = gpGlobals->curtime + GetFireRate();

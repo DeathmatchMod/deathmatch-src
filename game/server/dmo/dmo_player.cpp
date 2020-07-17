@@ -6,9 +6,9 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "sdk_player.h"
-#include "sdk_gamerules.h"
-#include "weapon_sdkbase.h"
+#include "dmo_player.h"
+#include "dmo_gamerules.h"
+#include "dmo_weapon_base.h"
 #include "predicted_viewmodel.h"
 #include "iservervehicle.h"
 #include "viewport_panel_names.h"
@@ -17,7 +17,6 @@ extern int gEvilImpulse101;
 
 ConVar sv_motd_unload_on_dismissal( "sv_motd_unload_on_dismissal", "0", 0, "If enabled, the MOTD contents will be unloaded when the player closes the MOTD." );
 
-#define SDK_PLAYER_MODEL "models/player/terror.mdl"
 
 
 // -------------------------------------------------------------------------------- //
@@ -62,18 +61,17 @@ void TE_PlayerAnimEvent( CBasePlayer *pPlayer, PlayerAnimEvent_t event, int nDat
 // -------------------------------------------------------------------------------- //
 // Tables.
 // -------------------------------------------------------------------------------- //
-BEGIN_DATADESC( CSDKPlayer )
-DEFINE_THINKFUNC( SDKPushawayThink ),
+BEGIN_DATADESC( CDMOPlayer )
 END_DATADESC()
 
-LINK_ENTITY_TO_CLASS( player, CSDKPlayer );
+LINK_ENTITY_TO_CLASS( player, CDMOPlayer );
 PRECACHE_REGISTER(player);
 
-BEGIN_SEND_TABLE_NOBASE( CSDKPlayer, DT_SDKLocalPlayerExclusive )
+BEGIN_SEND_TABLE_NOBASE( CDMOPlayer, DT_DMOLocalPlayerExclusive )
 	SendPropInt( SENDINFO( m_iShotsFired ), 8, SPROP_UNSIGNED ),
 END_SEND_TABLE()
 
-IMPLEMENT_SERVERCLASS_ST( CSDKPlayer, DT_SDKPlayer )
+IMPLEMENT_SERVERCLASS_ST( CDMOPlayer, DT_DMOPlayer )
 	SendPropExclude( "DT_BaseAnimating", "m_flPoseParameter" ),
 	SendPropExclude( "DT_BaseAnimating", "m_flPlaybackRate" ),	
 	SendPropExclude( "DT_BaseAnimating", "m_nSequence" ),
@@ -85,7 +83,7 @@ IMPLEMENT_SERVERCLASS_ST( CSDKPlayer, DT_SDKPlayer )
 	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
 
 	// Data that only gets sent to the local player.
-	SendPropDataTable( "sdklocaldata", 0, &REFERENCE_SEND_TABLE(DT_SDKLocalPlayerExclusive), SendProxy_SendLocalDataTable ),
+	SendPropDataTable( "sdklocaldata", 0, &REFERENCE_SEND_TABLE(DT_DMOLocalPlayerExclusive), SendProxy_SendLocalDataTable ),
 
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 0), 11 ),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 1), 11 ),
@@ -94,10 +92,10 @@ IMPLEMENT_SERVERCLASS_ST( CSDKPlayer, DT_SDKPlayer )
 	SendPropInt( SENDINFO( m_iThrowGrenadeCounter ), THROWGRENADE_COUNTER_BITS, SPROP_UNSIGNED ),
 END_SEND_TABLE()
 
-class CSDKRagdoll : public CBaseAnimatingOverlay
+class CDMORagdoll : public CBaseAnimatingOverlay
 {
 public:
-	DECLARE_CLASS( CSDKRagdoll, CBaseAnimatingOverlay );
+	DECLARE_CLASS( CDMORagdoll, CBaseAnimatingOverlay );
 	DECLARE_SERVERCLASS();
 
 	// Transmit ragdolls to everyone.
@@ -115,9 +113,9 @@ public:
 	CNetworkVector( m_vecRagdollOrigin );
 };
 
-LINK_ENTITY_TO_CLASS( sdk_ragdoll, CSDKRagdoll );
+LINK_ENTITY_TO_CLASS( sdk_ragdoll, CDMORagdoll );
 
-IMPLEMENT_SERVERCLASS_ST_NOBASE( CSDKRagdoll, DT_SDKRagdoll )
+IMPLEMENT_SERVERCLASS_ST_NOBASE( CDMORagdoll, DT_DMORagdoll )
 	SendPropVector( SENDINFO(m_vecRagdollOrigin), -1,  SPROP_COORD ),
 	SendPropEHandle( SENDINFO( m_hPlayer ) ),
 	SendPropModelIndex( SENDINFO( m_nModelIndex ) ),
@@ -138,32 +136,31 @@ void cc_CreatePredictionError_f()
 ConCommand cc_CreatePredictionError( "CreatePredictionError", cc_CreatePredictionError_f, "Create a prediction error", FCVAR_CHEAT );
 
 
-CSDKPlayer::CSDKPlayer()
+CDMOPlayer::CDMOPlayer()
 {
 	m_PlayerAnimState = CreatePlayerAnimState( this, this, LEGANIM_9WAY, true );
 
 	UseClientSideAnimation();
 	m_angEyeAngles.Init();
 
-	SetViewOffset( SDK_PLAYER_VIEW_OFFSET );
 
 	m_iThrowGrenadeCounter = 0;
 }
 
 
-CSDKPlayer::~CSDKPlayer()
+CDMOPlayer::~CDMOPlayer()
 {
 	m_PlayerAnimState->Release();
 }
 
 
-CSDKPlayer *CSDKPlayer::CreatePlayer( const char *className, edict_t *ed )
+CDMOPlayer *CDMOPlayer::CreatePlayer( const char *className, edict_t *ed )
 {
-	CSDKPlayer::s_PlayerEdict = ed;
-	return (CSDKPlayer*)CreateEntityByName( className );
+	CDMOPlayer::s_PlayerEdict = ed;
+	return (CDMOPlayer*)CreateEntityByName( className );
 }
 
-void CSDKPlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExitAngles )
+void CDMOPlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExitAngles )
 {
 	BaseClass::LeaveVehicle( vecExitPoint, vecExitAngles );
 
@@ -174,7 +171,7 @@ void CSDKPlayer::LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExit
 	// Teleport( &newPos, &newAng, &vec3_origin );
 }
 
-void CSDKPlayer::PreThink(void)
+void CDMOPlayer::PreThink(void)
 {
 	// Riding a vehicle?
 	if ( IsInAVehicle() )	
@@ -194,7 +191,7 @@ void CSDKPlayer::PreThink(void)
 }
 
 
-void CSDKPlayer::PostThink()
+void CDMOPlayer::PostThink()
 {
 	BaseClass::PostThink();
 
@@ -209,16 +206,16 @@ void CSDKPlayer::PostThink()
 }
 
 
-void CSDKPlayer::Precache()
+void CDMOPlayer::Precache()
 {
-	PrecacheModel( SDK_PLAYER_MODEL );
+	PrecacheModel( DMO_PLAYER_MODEL );
 
 	BaseClass::Precache();
 }
 
-void CSDKPlayer::Spawn()
+void CDMOPlayer::Spawn()
 {
-	SetModel( SDK_PLAYER_MODEL );
+	SetModel( DMO_PLAYER_MODEL );
 	SetMoveType( MOVETYPE_WALK );
 	RemoveSolidFlags( FSOLID_NOT_SOLID );
 
@@ -227,7 +224,7 @@ void CSDKPlayer::Spawn()
 	BaseClass::Spawn();
 }
 
-void CSDKPlayer::InitialSpawn( void )
+void CDMOPlayer::InitialSpawn( void )
 {
 	BaseClass::InitialSpawn();
 
@@ -247,7 +244,7 @@ void CSDKPlayer::InitialSpawn( void )
 	data->deleteThis();
 }
 
-void CSDKPlayer::Event_Killed( const CTakeDamageInfo &info )
+void CDMOPlayer::Event_Killed( const CTakeDamageInfo &info )
 {
 	// Note: since we're dead, it won't draw us on the client, but we don't set EF_NODRAW
 	// because we still want to transmit to the clients in our PVS.
@@ -257,15 +254,15 @@ void CSDKPlayer::Event_Killed( const CTakeDamageInfo &info )
 	CreateRagdollEntity();
 }
 
-void CSDKPlayer::CreateRagdollEntity()
+void CDMOPlayer::CreateRagdollEntity()
 {
 	// If we already have a ragdoll, don't make another one.
-	CSDKRagdoll *pRagdoll = dynamic_cast< CSDKRagdoll* >( m_hRagdoll.Get() );
+	CDMORagdoll *pRagdoll = dynamic_cast< CDMORagdoll* >( m_hRagdoll.Get() );
 
 	if ( !pRagdoll )
 	{
 		// create a new one
-		pRagdoll = dynamic_cast< CSDKRagdoll* >( CreateEntityByName( "sdk_ragdoll" ) );
+		pRagdoll = dynamic_cast< CDMORagdoll* >( CreateEntityByName( "sdk_ragdoll" ) );
 	}
 
 	if ( pRagdoll )
@@ -282,7 +279,7 @@ void CSDKPlayer::CreateRagdollEntity()
 	m_hRagdoll = pRagdoll;
 }
 
-void CSDKPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
+void CDMOPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 {
 	if ( event == PLAYERANIMEVENT_THROW_GRENADE )
 	{
@@ -298,12 +295,12 @@ void CSDKPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 	}
 }
 
-CWeaponSDKBase* CSDKPlayer::GetActiveSDKWeapon() const
+CWeaponDMOBase* CDMOPlayer::GetActiveDMOWeapon() const
 {
-	return dynamic_cast< CWeaponSDKBase* >( GetActiveWeapon() );
+	return dynamic_cast< CWeaponDMOBase* >( GetActiveWeapon() );
 }
 
-void CSDKPlayer::CreateViewModel( int index /*=0*/ )
+void CDMOPlayer::CreateViewModel( int index /*=0*/ )
 {
 	Assert( index >= 0 && index < MAX_VIEWMODELS );
 
@@ -322,7 +319,7 @@ void CSDKPlayer::CreateViewModel( int index /*=0*/ )
 	}
 }
 
-void CSDKPlayer::CheatImpulseCommands( int iImpulse )
+void CDMOPlayer::CheatImpulseCommands( int iImpulse )
 {
 	if ( iImpulse != 101 )
 	{
@@ -350,17 +347,17 @@ void CSDKPlayer::CheatImpulseCommands( int iImpulse )
 }
 
 
-void CSDKPlayer::FlashlightTurnOn( void )
+void CDMOPlayer::FlashlightTurnOn( void )
 {
 	AddEffects( EF_DIMLIGHT );
 }
 
-void CSDKPlayer::FlashlightTurnOff( void )
+void CDMOPlayer::FlashlightTurnOff( void )
 {
 	RemoveEffects( EF_DIMLIGHT );
 }
 
-int CSDKPlayer::FlashlightIsOn( void )
+int CDMOPlayer::FlashlightIsOn( void )
 {
 	return IsEffectActive( EF_DIMLIGHT );
 }

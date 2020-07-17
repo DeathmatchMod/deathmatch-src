@@ -4,31 +4,31 @@
 //
 //=============================================================================//
 
-#ifndef WEAPON_BASESDKGRENADE_H
-#define WEAPON_BASESDKGRENADE_H
+#ifndef WEAPON_BASEDMOGRENADE_H
+#define WEAPON_BASEDMOGRENADE_H
 #ifdef _WIN32
 #pragma once
 #endif
 
 
-#include "weapon_sdkbase.h"
+#include "dmo_weapon_base.h"
 
 
 #ifdef CLIENT_DLL
 	
-	#define CBaseSDKGrenade C_BaseSDKGrenade
+	#define CBaseDMOGrenade C_BaseDMOGrenade
 
 #endif
 
 
-class CBaseSDKGrenade : public CWeaponSDKBase
+class CBaseDMOGrenade : public CWeaponDMOBase
 {
 public:
-	DECLARE_CLASS( CBaseSDKGrenade, CWeaponSDKBase );
+	DECLARE_CLASS( CBaseDMOGrenade, CWeaponDMOBase );
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 
-	CBaseSDKGrenade();
+	CBaseDMOGrenade();
 
 	virtual void	Precache();
 
@@ -66,14 +66,14 @@ protected:
 	CNetworkVar( float, m_fThrowTime ); // the time at which the grenade will be thrown.  If this value is 0 then the time hasn't been set yet.
 
 private:
-	CBaseSDKGrenade( const CBaseSDKGrenade & ) {}
+	CBaseDMOGrenade( const CBaseDMOGrenade & ) {}
 };
 
 
-inline bool CBaseSDKGrenade::IsPinPulled() const
+inline bool CBaseDMOGrenade::IsPinPulled() const
 {
 	return m_bPinPulled;
 }
 
 
-#endif // WEAPON_BASESDKGRENADE_H
+#endif // WEAPON_BASEDMOGRENADE_H

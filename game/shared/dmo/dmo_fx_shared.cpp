@@ -5,8 +5,8 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "sdk_fx_shared.h"
-#include "weapon_sdkbase.h"
+#include "dmo_fx_shared.h"
+#include "dmo_weapon_base.h"
 
 #ifndef CLIENT_DLL
 	#include "ilagcompensationmanager.h"
@@ -15,14 +15,14 @@
 #ifdef CLIENT_DLL
 
 #include "fx_impact.h"
-#include "c_sdk_player.h"
+#include "c_dmo_player.h"
 
 	// this is a cheap ripoff from CBaseCombatWeapon::WeaponSound():
 	void FX_WeaponSound(
 		int iPlayerIndex,
 		WeaponSound_t sound_type,
 		const Vector &vOrigin,
-		CSDKWeaponInfo *pWeaponInfo )
+		CDMOWeaponInfo *pWeaponInfo )
 	{
 
 		// If we have some sounds from the weapon classname.txt file, play a random one of them
@@ -87,8 +87,7 @@
 
 #else
 
-	#include "sdk_player.h"
-	#include "te_firebullets.h"
+	#include "dmo_player.h"
 	
 	// Server doesn't play sounds anyway.
 	void StartGroupingSounds() {}
@@ -96,7 +95,7 @@
 	void FX_WeaponSound ( int iPlayerIndex,
 		WeaponSound_t sound_type,
 		const Vector &vOrigin,
-		CSDKWeaponInfo *pWeaponInfo ) {};
+		CDMOWeaponInfo *pWeaponInfo ) {};
 
 #endif
 
@@ -118,9 +117,9 @@ void FX_FireBullets(
 	bool bDoEffects = true;
 
 #ifdef CLIENT_DLL
-	C_SDKPlayer *pPlayer = ToSDKPlayer( ClientEntityList().GetBaseEntity( iPlayerIndex ) );
+	C_DMOPlayer *pPlayer = ToDMOPlayer( ClientEntityList().GetBaseEntity( iPlayerIndex ) );
 #else
-	CSDKPlayer *pPlayer = ToSDKPlayer( UTIL_PlayerByIndex( iPlayerIndex) );
+	CDMOPlayer *pPlayer = ToDMOPlayer( UTIL_PlayerByIndex( iPlayerIndex) );
 #endif
 
 	const char * weaponAlias =	WeaponIDToAlias( iWeaponID );
@@ -141,7 +140,7 @@ void FX_FireBullets(
 		return;
 	}
 
-	CSDKWeaponInfo *pWeaponInfo = static_cast< CSDKWeaponInfo* >( GetFileWeaponInfoFromHandle( hWpnInfo ) );
+	CDMOWeaponInfo *pWeaponInfo = static_cast< CDMOWeaponInfo* >( GetFileWeaponInfoFromHandle( hWpnInfo ) );
 
 #ifdef CLIENT_DLL
 	// Do the firing animation event.
@@ -153,18 +152,7 @@ void FX_FireBullets(
 			pPlayer->m_PlayerAnimState->DoAnimationEvent( PLAYERANIMEVENT_FIRE_GUN_SECONDARY );
 	}
 #else
-	// if this is server code, send the effect over to client as temp entity
-	// Dispatch one message for all the bullet impacts and sounds.
-	TE_FireBullets( 
-		iPlayerIndex,
-		vOrigin, 
-		vAngles, 
-		iWeaponID,
-		iMode,
-		iSeed,
-		flSpread
-		);
-
+	
 	bDoEffects = false; // no effects on server
 #endif
 

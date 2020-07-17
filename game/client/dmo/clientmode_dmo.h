@@ -4,26 +4,26 @@
 //
 //=============================================================================//
 
-#ifndef SDK_CLIENTMODE_H
-#define SDK_CLIENTMODE_H
+#ifndef DMO_CLIENTMODE_H
+#define DMO_CLIENTMODE_H
 #ifdef _WIN32
 #pragma once
 #endif
 
 #include "clientmode_shared.h"
-#include "sdkviewport.h"
+#include "dmoviewport.h"
 
-class ClientModeSDKNormal : public ClientModeShared 
+class ClientModeDMONormal : public ClientModeShared 
 {
-DECLARE_CLASS( ClientModeSDKNormal, ClientModeShared );
+DECLARE_CLASS( ClientModeDMONormal, ClientModeShared );
 
 private:
 
 // IClientMode overrides.
 public:
 
-					ClientModeSDKNormal();
-	virtual			~ClientModeSDKNormal();
+					ClientModeDMONormal();
+	virtual			~ClientModeDMONormal();
 
 	virtual void	InitViewport();
 
@@ -42,7 +42,7 @@ private:
 
 
 extern IClientMode *GetClientModeNormal();
-extern ClientModeSDKNormal* GetClientModeSDKNormal();
+extern ClientModeDMONormal* GetClientModeDMONormal();
 
 
-#endif // SDK_CLIENTMODE_H
+#endif // DMO_CLIENTMODE_H

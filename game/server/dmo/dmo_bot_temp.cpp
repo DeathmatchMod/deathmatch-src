@@ -13,14 +13,14 @@
 
 #include "cbase.h"
 #include "player.h"
-#include "sdk_player.h"
+#include "dmo_player.h"
 #include "in_buttons.h"
 #include "movehelper_server.h"
 #include "gameinterface.h"
 
 
-class CSDKBot;
-void Bot_Think( CSDKBot *pBot );
+class CDMOBot;
+void Bot_Think( CDMOBot *pBot );
 
 
 ConVar bot_forcefireweapon( "bot_forcefireweapon", "", 0, "Force bots with the specified weapon to fire." );
@@ -39,7 +39,7 @@ static int g_CurBotNumber = 1;
 
 
 // This is our bot class.
-class CSDKBot : public CSDKPlayer
+class CDMOBot : public CDMOPlayer
 {
 public:
 	bool			m_bBackwards;
@@ -54,7 +54,7 @@ public:
 	QAngle			m_LastAngles;
 };
 
-LINK_ENTITY_TO_CLASS( sdk_bot, CSDKBot );
+LINK_ENTITY_TO_CLASS( sdk_bot, CDMOBot );
 
 class CBotManager
 {
@@ -64,7 +64,7 @@ public:
 		// This tells it which edict to use rather than creating a new one.
 		CBasePlayer::s_PlayerEdict = pEdict;
 
-		CSDKBot *pPlayer = static_cast<CSDKBot *>( CreateEntityByName( "sdk_bot" ) );
+		CDMOBot *pPlayer = static_cast<CDMOBot *>( CreateEntityByName( "sdk_bot" ) );
 		if ( pPlayer )
 		{
 			pPlayer->SetPlayerName( playername );
@@ -85,7 +85,7 @@ CBasePlayer *BotPutInServer( bool bFrozen )
 	Q_snprintf( botname, sizeof( botname ), "Bot%02i", g_CurBotNumber );
 
 	
-	// This trick lets us create a CSDKBot for this client instead of the CSDKPlayer
+	// This trick lets us create a CDMOBot for this client instead of the CDMOPlayer
 	// that we would normally get when ClientPutInServer is called.
 	ClientPutInServerOverride( &CBotManager::ClientPutInServerOverride_Bot );
 	edict_t *pEdict = engine->CreateFakeClient( botname );
@@ -98,7 +98,7 @@ CBasePlayer *BotPutInServer( bool bFrozen )
 	}
 
 	// Allocate a player entity for the bot, and call spawn
-	CSDKBot *pPlayer = ((CSDKBot*)CBaseEntity::Instance( pEdict ));
+	CDMOBot *pPlayer = ((CDMOBot*)CBaseEntity::Instance( pEdict ));
 
 	pPlayer->ClearFlags();
 	pPlayer->AddFlag( FL_CLIENT | FL_FAKECLIENT );
@@ -116,7 +116,7 @@ CBasePlayer *BotPutInServer( bool bFrozen )
 }
 
 // Handler for the "bot" command.
-CON_COMMAND_F( "bot_add", "Add a bot.", FCVAR_CHEAT )
+CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_CHEAT )
 {
 	// Look at -count.
 	int count = args.FindArgInt( "-count", 1 );
@@ -140,11 +140,11 @@ void Bot_RunAll( void )
 {
 	for ( int i = 1; i <= gpGlobals->maxClients; i++ )
 	{
-		CSDKPlayer *pPlayer = ToSDKPlayer( UTIL_PlayerByIndex( i ) );
+		CDMOPlayer *pPlayer = ToDMOPlayer( UTIL_PlayerByIndex( i ) );
 
 		if ( pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT) )
 		{
-			CSDKBot *pBot = dynamic_cast< CSDKBot* >( pPlayer );
+			CDMOBot *pBot = dynamic_cast< CDMOBot* >( pPlayer );
 			if ( pBot )
 				Bot_Think( pBot );
 		}
@@ -188,7 +188,7 @@ bool Bot_RunMimicCommand( CUserCmd& cmd )
 //			msec - 
 // Output : 	virtual void
 //-----------------------------------------------------------------------------
-static void RunPlayerMove( CSDKPlayer *fakeclient, CUserCmd &cmd, float frametime )
+static void RunPlayerMove( CDMOPlayer *fakeclient, CUserCmd &cmd, float frametime )
 {
 	if ( !fakeclient )
 		return;
@@ -216,7 +216,7 @@ static void RunPlayerMove( CSDKPlayer *fakeclient, CUserCmd &cmd, float frametim
 
 
 
-void Bot_UpdateStrafing( CSDKBot *pBot, CUserCmd &cmd )
+void Bot_UpdateStrafing( CDMOBot *pBot, CUserCmd &cmd )
 {
 	if ( gpGlobals->curtime >= pBot->m_flNextStrafeTime )
 	{
@@ -244,7 +244,7 @@ void Bot_UpdateStrafing( CSDKBot *pBot, CUserCmd &cmd )
 }
 
 
-void Bot_UpdateDirection( CSDKBot *pBot )
+void Bot_UpdateDirection( CDMOBot *pBot )
 {
 	float angledelta = 15.0;
 	QAngle angle;
@@ -297,7 +297,7 @@ void Bot_UpdateDirection( CSDKBot *pBot )
 }
 
 
-void Bot_FlipOut( CSDKBot *pBot, CUserCmd &cmd )
+void Bot_FlipOut( CDMOBot *pBot, CUserCmd &cmd )
 {
 	if ( bot_flipout.GetInt() > 0 && pBot->IsAlive() )
 	{
@@ -335,12 +335,12 @@ void Bot_FlipOut( CSDKBot *pBot, CUserCmd &cmd )
 }
 
 
-void Bot_HandleSendCmd( CSDKBot *pBot )
+void Bot_HandleSendCmd( CDMOBot *pBot )
 {
 	if ( strlen( bot_sendcmd.GetString() ) > 0 )
 	{
 		//send the cmd from this bot
-		pBot->ClientCommand( bot_sendcmd.GetString() );
+		engine->ClientCommand( pBot->edict(), bot_sendcmd.GetString() );
 
 		bot_sendcmd.SetValue("");
 	}
@@ -348,7 +348,7 @@ void Bot_HandleSendCmd( CSDKBot *pBot )
 
 
 // If bots are being forced to fire a weapon, see if I have it
-void Bot_ForceFireWeapon( CSDKBot *pBot, CUserCmd &cmd )
+void Bot_ForceFireWeapon( CDMOBot *pBot, CUserCmd &cmd )
 {
 	if ( bot_forcefireweapon.GetString() )
 	{
@@ -377,7 +377,7 @@ void Bot_ForceFireWeapon( CSDKBot *pBot, CUserCmd &cmd )
 }
 
 
-void Bot_SetForwardMovement( CSDKBot *pBot, CUserCmd &cmd )
+void Bot_SetForwardMovement( CDMOBot *pBot, CUserCmd &cmd )
 {
 	if ( !pBot->IsEFlagSet(EFL_BOT_FROZEN) )
 	{
@@ -398,7 +398,7 @@ void Bot_SetForwardMovement( CSDKBot *pBot, CUserCmd &cmd )
 }
 
 
-void Bot_HandleRespawn( CSDKBot *pBot, CUserCmd &cmd )
+void Bot_HandleRespawn( CDMOBot *pBot, CUserCmd &cmd )
 {
 	// Wait for Reinforcement wave
 	if ( !pBot->IsAlive() )
@@ -423,7 +423,7 @@ void Bot_HandleRespawn( CSDKBot *pBot, CUserCmd &cmd )
 //-----------------------------------------------------------------------------
 // Run this Bot's AI for one frame.
 //-----------------------------------------------------------------------------
-void Bot_Think( CSDKBot *pBot )
+void Bot_Think( CDMOBot *pBot )
 {
 	// Make sure we stay being a bot
 	pBot->AddFlag( FL_FAKECLIENT );

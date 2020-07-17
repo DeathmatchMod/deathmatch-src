@@ -12,16 +12,16 @@
 #include "apparent_velocity_helper.h"
 #include "utldict.h"
 
-#include "sdk_playeranimstate.h"
-#include "weapon_sdkbase.h"
-#include "weapon_basesdkgrenade.h"
+#include "dmo_playeranimstate.h"
+#include "dmo_weapon_base.h"
+#include "dmo_weapon_basegrenade.h"
 
 #ifdef CLIENT_DLL
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 	#include "bone_setup.h"
 	#include "interpolatedvar.h"
 #else
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 #endif
 
 #define ANIM_TOPSPEED_WALK			100
@@ -49,16 +49,16 @@
 
 
 // ------------------------------------------------------------------------------------------------ //
-// CSDKPlayerAnimState declaration.
+// CDMOPlayerAnimState declaration.
 // ------------------------------------------------------------------------------------------------ //
 
-class CSDKPlayerAnimState : public CBasePlayerAnimState, public ISDKPlayerAnimState
+class CDMOPlayerAnimState : public CBasePlayerAnimState, public IDMOPlayerAnimState
 {
 public:
-	DECLARE_CLASS( CSDKPlayerAnimState, CBasePlayerAnimState );
-	friend ISDKPlayerAnimState* CreatePlayerAnimState( CBaseAnimatingOverlay *pEntity, ISDKPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences );
+	DECLARE_CLASS( CDMOPlayerAnimState, CBasePlayerAnimState );
+	friend IDMOPlayerAnimState* CreatePlayerAnimState( CBaseAnimatingOverlay *pEntity, IDMOPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences );
 
-	CSDKPlayerAnimState();
+	CDMOPlayerAnimState();
 
 	virtual void DoAnimationEvent( PlayerAnimEvent_t event, int nData );
 	virtual bool IsThrowingGrenade();
@@ -72,7 +72,7 @@ public:
 	virtual void ClearAnimationLayers();
 	
 
-	void InitSDK( CBaseAnimatingOverlay *pPlayer, ISDKPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences );
+	void InitDMO( CBaseAnimatingOverlay *pPlayer, IDMOPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences );
 	
 protected:
 
@@ -118,29 +118,29 @@ private:
 	int m_iGrenadeSequence;
 	int m_iLastThrowGrenadeCounter;	// used to detect when the guy threw the grenade.
 	
-	ISDKPlayerAnimStateHelpers *m_pHelpers;
+	IDMOPlayerAnimStateHelpers *m_pHelpers;
 };
 
 
-ISDKPlayerAnimState* CreatePlayerAnimState( CBaseAnimatingOverlay *pEntity, ISDKPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences )
+IDMOPlayerAnimState* CreatePlayerAnimState( CBaseAnimatingOverlay *pEntity, IDMOPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences )
 {
-	CSDKPlayerAnimState *pRet = new CSDKPlayerAnimState;
-	pRet->InitSDK( pEntity, pHelpers, legAnimType, bUseAimSequences );
+	CDMOPlayerAnimState *pRet = new CDMOPlayerAnimState;
+	pRet->InitDMO( pEntity, pHelpers, legAnimType, bUseAimSequences );
 	return pRet;
 }
 
 // ------------------------------------------------------------------------------------------------ //
-// CSDKPlayerAnimState implementation.
+// CDMOPlayerAnimState implementation.
 // ------------------------------------------------------------------------------------------------ //
 
-CSDKPlayerAnimState::CSDKPlayerAnimState()
+CDMOPlayerAnimState::CDMOPlayerAnimState()
 {
 	m_pOuter = NULL;
 	m_bReloading = false;
 }
 
 
-void CSDKPlayerAnimState::InitSDK( CBaseAnimatingOverlay *pEntity, ISDKPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences )
+void CDMOPlayerAnimState::InitDMO( CBaseAnimatingOverlay *pEntity, IDMOPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences )
 {
 	CModAnimConfig config;
 	config.m_flMaxBodyYawDegrees = 90;
@@ -153,7 +153,7 @@ void CSDKPlayerAnimState::InitSDK( CBaseAnimatingOverlay *pEntity, ISDKPlayerAni
 }
 
 
-void CSDKPlayerAnimState::ClearAnimationState()
+void CDMOPlayerAnimState::ClearAnimationState()
 {
 	m_bJumping = false;
 	m_bFiring = false;
@@ -165,7 +165,7 @@ void CSDKPlayerAnimState::ClearAnimationState()
 }
 
 
-void CSDKPlayerAnimState::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
+void CDMOPlayerAnimState::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 {
 	Assert( event != PLAYERANIMEVENT_THROW_GRENADE );
 
@@ -195,13 +195,13 @@ void CSDKPlayerAnimState::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 	}
 	else
 	{
-		Assert( !"CSDKPlayerAnimState::DoAnimationEvent" );
+		Assert( !"CDMOPlayerAnimState::DoAnimationEvent" );
 	}
 }
 
 
 float g_flThrowGrenadeFraction = 0.25;
-bool CSDKPlayerAnimState::IsThrowingGrenade()
+bool CDMOPlayerAnimState::IsThrowingGrenade()
 {
 	if ( m_bThrowingGrenade )
 	{
@@ -216,13 +216,13 @@ bool CSDKPlayerAnimState::IsThrowingGrenade()
 }
 
 
-int CSDKPlayerAnimState::CalcReloadLayerSequence()
+int CDMOPlayerAnimState::CalcReloadLayerSequence()
 {
 	const char *pSuffix = GetWeaponSuffix();
 	if ( !pSuffix )
 		return -1;
 
-	CWeaponSDKBase *pWeapon = m_pHelpers->SDKAnim_GetActiveWeapon();
+	CWeaponDMOBase *pWeapon = m_pHelpers->DMOAnim_GetActiveWeapon();
 	if ( !pWeapon )
 		return -1;
 
@@ -233,10 +233,10 @@ int CSDKPlayerAnimState::CalcReloadLayerSequence()
 	if ( iReloadSequence != -1 )
 		return iReloadSequence;
 
-	//SDKTODO
+	//DMOTODO
 /*
 	// Ok, look for generic categories.. pistol, shotgun, rifle, etc.
-	if ( pWeapon->GetSDKWpnData().m_WeaponType == WEAPONTYPE_PISTOL )
+	if ( pWeapon->GetDMOWpnData().m_WeaponType == WEAPONTYPE_PISTOL )
 	{
 		Q_snprintf( szName, sizeof( szName ), "reload_pistol" );
 		iReloadSequence = m_pOuter->LookupSequence( szName );
@@ -255,7 +255,7 @@ int CSDKPlayerAnimState::CalcReloadLayerSequence()
 
 
 #ifdef CLIENT_DLL
-	void CSDKPlayerAnimState::UpdateLayerSequenceGeneric( CStudioHdr *pStudioHdr, int iLayer, bool &bEnabled, float &flCurCycle, int &iSequence, bool bWaitAtEnd )
+	void CDMOPlayerAnimState::UpdateLayerSequenceGeneric( CStudioHdr *pStudioHdr, int iLayer, bool &bEnabled, float &flCurCycle, int &iSequence, bool bWaitAtEnd )
 	{
 		if ( !bEnabled )
 			return;
@@ -291,12 +291,12 @@ int CSDKPlayerAnimState::CalcReloadLayerSequence()
 
 
 
-bool CSDKPlayerAnimState::IsOuterGrenadePrimed()
+bool CDMOPlayerAnimState::IsOuterGrenadePrimed()
 {
 	CBaseCombatCharacter *pChar = m_pOuter->MyCombatCharacterPointer();
 	if ( pChar )
 	{
-		CBaseSDKGrenade *pGren = dynamic_cast<CBaseSDKGrenade*>( pChar->GetActiveWeapon() );
+		CBaseDMOGrenade *pGren = dynamic_cast<CBaseDMOGrenade*>( pChar->GetActiveWeapon() );
 		return pGren && pGren->IsPinPulled();
 	}
 	else
@@ -306,7 +306,7 @@ bool CSDKPlayerAnimState::IsOuterGrenadePrimed()
 }
 
 
-void CSDKPlayerAnimState::ComputeGrenadeSequence( CStudioHdr *pStudioHdr )
+void CDMOPlayerAnimState::ComputeGrenadeSequence( CStudioHdr *pStudioHdr )
 {
 #ifdef CLIENT_DLL
 	if ( m_bThrowingGrenade )
@@ -361,21 +361,21 @@ void CSDKPlayerAnimState::ComputeGrenadeSequence( CStudioHdr *pStudioHdr )
 }
 
 
-int CSDKPlayerAnimState::CalcGrenadePrimeSequence()
+int CDMOPlayerAnimState::CalcGrenadePrimeSequence()
 {
 	return CalcSequenceIndex( "idle_shoot_gren1" );
 }
 
 
-int CSDKPlayerAnimState::CalcGrenadeThrowSequence()
+int CDMOPlayerAnimState::CalcGrenadeThrowSequence()
 {
 	return CalcSequenceIndex( "idle_shoot_gren2" );
 }
 
 
-int CSDKPlayerAnimState::GetOuterGrenadeThrowCounter()
+int CDMOPlayerAnimState::GetOuterGrenadeThrowCounter()
 {
-	CSDKPlayer *pPlayer = dynamic_cast<CSDKPlayer*>( m_pOuter );
+	CDMOPlayer *pPlayer = dynamic_cast<CDMOPlayer*>( m_pOuter );
 	if ( pPlayer )
 		return pPlayer->m_iThrowGrenadeCounter;
 	else
@@ -383,7 +383,7 @@ int CSDKPlayerAnimState::GetOuterGrenadeThrowCounter()
 }
 
 
-void CSDKPlayerAnimState::ComputeReloadSequence( CStudioHdr *pStudioHdr )
+void CDMOPlayerAnimState::ComputeReloadSequence( CStudioHdr *pStudioHdr )
 {
 #ifdef CLIENT_DLL
 	UpdateLayerSequenceGeneric( pStudioHdr, RELOADSEQUENCE_LAYER, m_bReloading, m_flReloadCycle, m_iReloadSequence, false );
@@ -393,7 +393,7 @@ void CSDKPlayerAnimState::ComputeReloadSequence( CStudioHdr *pStudioHdr )
 }
 
 
-int CSDKPlayerAnimState::CalcAimLayerSequence( float *flCycle, float *flAimSequenceWeight, bool bForceIdle )
+int CDMOPlayerAnimState::CalcAimLayerSequence( float *flCycle, float *flAimSequenceWeight, bool bForceIdle )
 {
 	const char *pSuffix = GetWeaponSuffix();
 	if ( !pSuffix )
@@ -436,23 +436,23 @@ int CSDKPlayerAnimState::CalcAimLayerSequence( float *flCycle, float *flAimSeque
 }
 
 
-const char* CSDKPlayerAnimState::GetWeaponSuffix()
+const char* CDMOPlayerAnimState::GetWeaponSuffix()
 {
 	// Figure out the weapon suffix.
-	CWeaponSDKBase *pWeapon = m_pHelpers->SDKAnim_GetActiveWeapon();
+	CWeaponDMOBase *pWeapon = m_pHelpers->DMOAnim_GetActiveWeapon();
 	if ( !pWeapon )
 		return "Pistol";
 
-	const char *pSuffix = pWeapon->GetSDKWpnData().m_szAnimExtension;
+	const char *pSuffix = pWeapon->GetDMOWpnData().m_szAnimExtension;
 
 	return pSuffix;
 }
 
 
-int CSDKPlayerAnimState::CalcFireLayerSequence(PlayerAnimEvent_t event)
+int CDMOPlayerAnimState::CalcFireLayerSequence(PlayerAnimEvent_t event)
 {
 	// Figure out the weapon suffix.
-	CWeaponSDKBase *pWeapon = m_pHelpers->SDKAnim_GetActiveWeapon();
+	CWeaponDMOBase *pWeapon = m_pHelpers->DMOAnim_GetActiveWeapon();
 	if ( !pWeapon )
 		return 0;
 
@@ -492,13 +492,13 @@ int CSDKPlayerAnimState::CalcFireLayerSequence(PlayerAnimEvent_t event)
 }
 
 
-bool CSDKPlayerAnimState::CanThePlayerMove()
+bool CDMOPlayerAnimState::CanThePlayerMove()
 {
-	return m_pHelpers->SDKAnim_CanMove();
+	return m_pHelpers->DMOAnim_CanMove();
 }
 
 
-float CSDKPlayerAnimState::GetCurrentMaxGroundSpeed()
+float CDMOPlayerAnimState::GetCurrentMaxGroundSpeed()
 {
 	Activity currentActivity = 	m_pOuter->GetSequenceActivity( m_pOuter->GetSequence() );
 	if ( currentActivity == ACT_WALK || currentActivity == ACT_IDLE )
@@ -512,7 +512,7 @@ float CSDKPlayerAnimState::GetCurrentMaxGroundSpeed()
 }
 
 
-bool CSDKPlayerAnimState::HandleJumping()
+bool CDMOPlayerAnimState::HandleJumping()
 {
 	if ( m_bJumping )
 	{
@@ -539,7 +539,7 @@ bool CSDKPlayerAnimState::HandleJumping()
 }
 
 
-Activity CSDKPlayerAnimState::CalcMainActivity()
+Activity CDMOPlayerAnimState::CalcMainActivity()
 {
 	float flOuterSpeed = GetOuterXYSpeed();
 
@@ -578,7 +578,7 @@ Activity CSDKPlayerAnimState::CalcMainActivity()
 }
 
 
-void CSDKPlayerAnimState::DebugShowAnimState( int iStartLine )
+void CDMOPlayerAnimState::DebugShowAnimState( int iStartLine )
 {
 #ifdef CLIENT_DLL
 	engine->Con_NPrintf( iStartLine++, "fire  : %s, cycle: %.2f\n", m_bFiring ? GetSequenceName( m_pOuter->GetModelPtr(), m_iFireSequence ) : "[not firing]", m_flFireCycle );
@@ -588,7 +588,7 @@ void CSDKPlayerAnimState::DebugShowAnimState( int iStartLine )
 }
 
 
-void CSDKPlayerAnimState::ComputeSequences( CStudioHdr *pStudioHdr )
+void CDMOPlayerAnimState::ComputeSequences( CStudioHdr *pStudioHdr )
 {
 	BaseClass::ComputeSequences( pStudioHdr );
 
@@ -598,7 +598,7 @@ void CSDKPlayerAnimState::ComputeSequences( CStudioHdr *pStudioHdr )
 }
 
 
-void CSDKPlayerAnimState::ClearAnimationLayers()
+void CDMOPlayerAnimState::ClearAnimationLayers()
 {
 	if ( !m_pOuter )
 		return;
@@ -611,7 +611,7 @@ void CSDKPlayerAnimState::ClearAnimationLayers()
 }
 
 
-void CSDKPlayerAnimState::ComputeFireSequence( CStudioHdr *pStudioHdr )
+void CDMOPlayerAnimState::ComputeFireSequence( CStudioHdr *pStudioHdr )
 {
 #ifdef CLIENT_DLL
 	UpdateLayerSequenceGeneric( pStudioHdr, FIRESEQUENCE_LAYER, m_bFiring, m_flFireCycle, m_iFireSequence, false );

@@ -5,8 +5,8 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef SDK_BOT_TEMP_H
-#define SDK_BOT_TEMP_H
+#ifndef DMO_BOT_TEMP_H
+#define DMO_BOT_TEMP_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -18,4 +18,4 @@ CBasePlayer *BotPutInServer( bool bFrozen, int iTeam, int iClass );
 void Bot_RunAll();
 
 
-#endif // SDK_BOT_TEMP_H
+#endif // DMO_BOT_TEMP_H

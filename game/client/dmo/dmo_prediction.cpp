@@ -14,9 +14,9 @@ static CMoveData g_MoveData;
 CMoveData *g_pMoveData = &g_MoveData;
 
 
-class CSDKPrediction : public CPrediction
+class CDMOPrediction : public CPrediction
 {
-DECLARE_CLASS( CSDKPrediction, CPrediction );
+DECLARE_CLASS( CDMOPrediction, CPrediction );
 
 public:
 	virtual void	SetupMove( C_BasePlayer *player, CUserCmd *ucmd, IMoveHelper *pHelper, CMoveData *move );
@@ -26,7 +26,7 @@ public:
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CSDKPrediction::SetupMove( C_BasePlayer *player, CUserCmd *ucmd, IMoveHelper *pHelper, 
+void CDMOPrediction::SetupMove( C_BasePlayer *player, CUserCmd *ucmd, IMoveHelper *pHelper, 
 	CMoveData *move )
 {
 	// Call the default SetupMove code.
@@ -36,7 +36,7 @@ void CSDKPrediction::SetupMove( C_BasePlayer *player, CUserCmd *ucmd, IMoveHelpe
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CSDKPrediction::FinishMove( C_BasePlayer *player, CUserCmd *ucmd, CMoveData *move )
+void CDMOPrediction::FinishMove( C_BasePlayer *player, CUserCmd *ucmd, CMoveData *move )
 {
 	// Call the default FinishMove code.
 	BaseClass::FinishMove( player, ucmd, move );
@@ -45,9 +45,9 @@ void CSDKPrediction::FinishMove( C_BasePlayer *player, CUserCmd *ucmd, CMoveData
 
 // Expose interface to engine
 // Expose interface to engine
-static CSDKPrediction g_Prediction;
+static CDMOPrediction g_Prediction;
 
-EXPOSE_SINGLE_INTERFACE_GLOBALVAR( CSDKPrediction, IPrediction, VCLIENT_PREDICTION_INTERFACE_VERSION, g_Prediction );
+EXPOSE_SINGLE_INTERFACE_GLOBALVAR( CDMOPrediction, IPrediction, VCLIENT_PREDICTION_INTERFACE_VERSION, g_Prediction );
 
 CPrediction *prediction = &g_Prediction;
 

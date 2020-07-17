@@ -8,11 +8,11 @@
 
 #ifdef CLIENT_DLL
 	
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 
 #else
 
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 
 #endif
 
@@ -25,17 +25,17 @@ ConVar sv_showimpacts("sv_showimpacts", "0", FCVAR_REPLICATED, "Shows client (re
 
 void DispatchEffect( const char *pName, const CEffectData &data );
 
-CWeaponSDKBase* CSDKPlayer::SDKAnim_GetActiveWeapon()
+CWeaponDMOBase* CDMOPlayer::DMOAnim_GetActiveWeapon()
 {
-	return GetActiveSDKWeapon();
+	return GetActiveDMOWeapon();
 }
 
-bool CSDKPlayer::SDKAnim_CanMove()
+bool CDMOPlayer::DMOAnim_CanMove()
 {
 	return true;
 }
 
-void CSDKPlayer::FireBullet( 
+void CDMOPlayer::FireBullet( 
 						   Vector vecSrc,	// shooting postion
 						   const QAngle &shootAngles,  //shooting angle
 						   float vecSpread, // spread vector

@@ -5,11 +5,11 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#ifndef SDKVIEWPORT_H
-#define SDKVIEWPORT_H
+#ifndef DMOVIEWPORT_H
+#define DMOVIEWPORT_H
 
 
-#include "sdk_shareddefs.h"
+#include "dmo_shareddefs.h"
 #include "baseviewport.h"
 
 
@@ -20,11 +20,11 @@ namespace vgui
 	class Panel;
 }
 
-class SDKViewport : public CBaseViewport
+class DMOViewport : public CBaseViewport
 {
 
 private:
-	DECLARE_CLASS_SIMPLE( SDKViewport, CBaseViewport );
+	DECLARE_CLASS_SIMPLE( DMOViewport, CBaseViewport );
 
 public:
 
@@ -37,4 +37,4 @@ public:
 };
 
 
-#endif // SDKViewport_H
+#endif // DMOViewport_H

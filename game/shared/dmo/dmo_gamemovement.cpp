@@ -13,41 +13,41 @@
 //=============================================================================
 #include "cbase.h"
 #include "gamemovement.h"
-#include "sdk_gamerules.h"
-#include "sdk_shareddefs.h"
+#include "dmo_gamerules.h"
+#include "dmo_shareddefs.h"
 #include "in_buttons.h"
 #include "movevars_shared.h"
 
 
 #ifdef CLIENT_DLL
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 #else
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 #endif
 
 
-class CSDKGameMovement : public CGameMovement
+class CDMOGameMovement : public CGameMovement
 {
 public:
-	DECLARE_CLASS( CSDKGameMovement, CGameMovement );
+	DECLARE_CLASS( CDMOGameMovement, CGameMovement );
 
-	CSDKGameMovement();
+	CDMOGameMovement();
 };
 
 
 // Expose our interface.
-static CSDKGameMovement g_GameMovement;
+static CDMOGameMovement g_GameMovement;
 IGameMovement *g_pGameMovement = ( IGameMovement * )&g_GameMovement;
 
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CGameMovement, IGameMovement,INTERFACENAME_GAMEMOVEMENT, g_GameMovement );
 
 
 // ---------------------------------------------------------------------------------------- //
-// CSDKGameMovement.
+// CDMOGameMovement.
 // ---------------------------------------------------------------------------------------- //
 
-CSDKGameMovement::CSDKGameMovement()
+CDMOGameMovement::CDMOGameMovement()
 {
-	//m_vecViewOffsetNormal = SDK_PLAYER_VIEW_OFFSET;
+	//m_vecViewOffsetNormal = DMO_PLAYER_VIEW_OFFSET;
 }
 

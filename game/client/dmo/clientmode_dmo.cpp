@@ -7,7 +7,7 @@
 //===========================================================================//
 #include "cbase.h"
 #include "hud.h"
-#include "clientmode_sdk.h"
+#include "clientmode_dmo.h"
 #include "cdll_client_int.h"
 #include "iinput.h"
 #include "vgui/ISurface.h"
@@ -37,10 +37,10 @@ IClientMode *g_pClientMode = NULL;
 
 
 // --------------------------------------------------------------------------------- //
-// CSDKModeManager.
+// CDMOModeManager.
 // --------------------------------------------------------------------------------- //
 
-class CSDKModeManager : public IVModeManager
+class CDMOModeManager : public IVModeManager
 {
 public:
 	virtual void	Init();
@@ -50,28 +50,28 @@ public:
 	virtual void	ActivateMouse( bool isactive ) {}
 };
 
-static CSDKModeManager g_ModeManager;
+static CDMOModeManager g_ModeManager;
 IVModeManager *modemanager = ( IVModeManager * )&g_ModeManager;
 
 // --------------------------------------------------------------------------------- //
-// CSDKModeManager implementation.
+// CDMOModeManager implementation.
 // --------------------------------------------------------------------------------- //
 
 #define SCREEN_FILE		"scripts/vgui_screens.txt"
 
-void CSDKModeManager::Init()
+void CDMOModeManager::Init()
 {
 	g_pClientMode = GetClientModeNormal();
 	
 	PanelMetaClassMgr()->LoadMetaClassDefinitionFile( SCREEN_FILE );
 }
 
-void CSDKModeManager::LevelInit( const char *newmap )
+void CDMOModeManager::LevelInit( const char *newmap )
 {
 	g_pClientMode->LevelInit( newmap );
 }
 
-void CSDKModeManager::LevelShutdown( void )
+void CDMOModeManager::LevelShutdown( void )
 {
 	g_pClientMode->LevelShutdown();
 }
@@ -79,25 +79,25 @@ void CSDKModeManager::LevelShutdown( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-ClientModeSDKNormal::ClientModeSDKNormal()
+ClientModeDMONormal::ClientModeDMONormal()
 {
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: If you don't know what a destructor is by now, you are probably going to get fired
 //-----------------------------------------------------------------------------
-ClientModeSDKNormal::~ClientModeSDKNormal()
+ClientModeDMONormal::~ClientModeDMONormal()
 {
 }
 
 
-void ClientModeSDKNormal::InitViewport()
+void ClientModeDMONormal::InitViewport()
 {
-	m_pViewport = new SDKViewport();
+	m_pViewport = new DMOViewport();
 	m_pViewport->Start( gameuifuncs, gameeventmanager );
 }
 
-ClientModeSDKNormal g_ClientModeNormal;
+ClientModeDMONormal g_ClientModeNormal;
 
 IClientMode *GetClientModeNormal()
 {
@@ -105,24 +105,24 @@ IClientMode *GetClientModeNormal()
 }
 
 
-ClientModeSDKNormal* GetClientModeSDKNormal()
+ClientModeDMONormal* GetClientModeDMONormal()
 {
-	Assert( dynamic_cast< ClientModeSDKNormal* >( GetClientModeNormal() ) );
+	Assert( dynamic_cast< ClientModeDMONormal* >( GetClientModeNormal() ) );
 
-	return static_cast< ClientModeSDKNormal* >( GetClientModeNormal() );
+	return static_cast< ClientModeDMONormal* >( GetClientModeNormal() );
 }
 
-float ClientModeSDKNormal::GetViewModelFOV( void )
+float ClientModeDMONormal::GetViewModelFOV( void )
 {
 	return 74.0f;
 }
 
-int ClientModeSDKNormal::GetDeathMessageStartHeight( void )
+int ClientModeDMONormal::GetDeathMessageStartHeight( void )
 {
 	return m_pViewport->GetDeathMessageStartHeight();
 }
 
-void ClientModeSDKNormal::PostRenderVGui()
+void ClientModeDMONormal::PostRenderVGui()
 {
 }
 

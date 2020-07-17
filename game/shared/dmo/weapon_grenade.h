@@ -10,28 +10,28 @@
 #pragma once
 #endif
 
-#include "weapon_basesdkgrenade.h"
+#include "dmo_weapon_basegrenade.h"
 
 
 #ifdef CLIENT_DLL
 	
-	#define CSDKGrenade C_SDKGrenade
+	#define CDMOGrenade C_DMOGrenade
 
 #endif
 
 //-----------------------------------------------------------------------------
 // Fragmentation grenades
 //-----------------------------------------------------------------------------
-class CSDKGrenade : public CBaseSDKGrenade
+class CDMOGrenade : public CBaseDMOGrenade
 {
 public:
-	DECLARE_CLASS( CSDKGrenade, CBaseSDKGrenade );
+	DECLARE_CLASS( CDMOGrenade, CBaseDMOGrenade );
 	DECLARE_NETWORKCLASS();
 	DECLARE_PREDICTABLE();
 
-	CSDKGrenade() {}
+	CDMOGrenade() {}
 
-	virtual SDKWeaponID GetWeaponID( void ) const		{ return WEAPON_GRENADE; }
+	virtual DMOWeaponID GetWeaponID( void ) const		{ return DMO_WEAPON_GRENADE; }
 
 #ifdef CLIENT_DLL
 
@@ -42,7 +42,7 @@ public:
 	
 #endif
 
-	CSDKGrenade( const CSDKGrenade & ) {}
+	CDMOGrenade( const CDMOGrenade & ) {}
 };
 
 

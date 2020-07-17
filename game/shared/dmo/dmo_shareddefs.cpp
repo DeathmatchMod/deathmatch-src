@@ -5,14 +5,15 @@
 //=====================================================================================//
 
 #include "cbase.h"
-#include "weapon_sdkbase.h"
+#include "dmo_weapon_base.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+#include "dmo_shareddefs.h"
 
 // the 1 / 2 / 3 respectively are all identical in our template mod to start, I've made the base ones (pc_class1, pc_class2, pc_class3) and then duplicated them for the teams.
 //Tony;  for our template we have two versions.
-#if defined ( SDK_USE_PLAYERCLASSES ) && defined ( SDK_USE_TEAMS )
+#if defined ( DMO_USE_PLAYERCLASSES ) && defined ( DMO_USE_TEAMS )
 const char *pszTeamBlueClasses[] = 
 {
 	"blue_class1",
@@ -37,7 +38,7 @@ ConVar	mp_limit_red_class2(		"mp_limit_red_class2", "-1", FCVAR_REPLICATED, "Cla
 ConVar	mp_limit_red_class3(		"mp_limit_red_class3", "-1", FCVAR_REPLICATED, "Class limit for Red class 3" );
 
 //Tony; not using teams, but we are using classes
-#elif defined ( SDK_USE_PLAYERCLASSES ) && !defined( SDK_USE_TEAMS )
+#elif defined ( DMO_USE_PLAYERCLASSES ) && !defined( DMO_USE_TEAMS )
 const char *pszPlayerClasses[] =
 {
 	"pc_class1",
@@ -52,18 +53,18 @@ ConVar	mp_limit_pc_class3(		"mp_limit_pc_class3", "-1", FCVAR_REPLICATED, "Class
 
 const char *pszTeamNames[] =
 {
-	"#SDK_Team_Unassigned",
-	"#SDK_Team_Spectator",
-#if defined ( SDK_USE_TEAMS )
-	"#SDK_Team_Blue",
-	"#SDK_Team_Red",
+	"#DMO_Team_Unassigned",
+	"#DMO_Team_Spectator",
+#if defined ( DMO_USE_TEAMS )
+	"#DMO_Team_Blue",
+	"#DMO_Team_Red",
 #endif
 };
 
 //Tony; We need to precache all possible player models that we're going to use
 const char *pszPossiblePlayerModels[] =
 {
-	SDK_PLAYER_MODEL,
+	DMO_PLAYER_MODEL,
 	"models/player/american_rifleman.mdl",
 	"models/player/german_rifleman.mdl",
 	NULL
@@ -77,11 +78,11 @@ const char *pszPossiblePlayerModels[] =
 static const char * s_WeaponAliasInfo[] = 
 {
 	"none",		// WEAPON_NONE
-	"mp5",		// SDK_WEAPON_MP5
-	"shotgun",	// SDK_WEAPON_SHOTGUN
-	"grenade",	// SDK_WEAPON_GRENADE
-	"pistol",	// SDK_WEAPON_PISTOL
-	"crowbar",	// SDK_WEAPON_CROWBAR
+	"mp5",		// DMO_WEAPON_MP5
+	"shotgun",	// DMO_WEAPON_SHOTGUN
+	"grenade",	// DMO_WEAPON_GRENADE
+	"pistol",	// DMO_WEAPON_PISTOL
+	"crowbar",	// DMO_WEAPON_CROWBAR
 	NULL,		// WEAPON_NONE
 };
 

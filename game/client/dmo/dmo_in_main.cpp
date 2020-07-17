@@ -11,12 +11,12 @@
 //-----------------------------------------------------------------------------
 // Purpose: TF Input interface
 //-----------------------------------------------------------------------------
-class CSDKInput : public CInput
+class CDMOInput : public CInput
 {
 public:
 };
 
-static CSDKInput g_Input;
+static CDMOInput g_Input;
 
 // Expose this interface
 IInput *input = ( IInput * )&g_Input;

@@ -5,27 +5,26 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "weapon_sdkbase.h"
-#include "sdk_fx_shared.h"
+#include "dmo_weapon_base.h"
+#include "dmo_fx_shared.h"
 
 
 #if defined( CLIENT_DLL )
 
 	#define CWeaponShotgun C_WeaponShotgun
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 
 #else
 
-	#include "sdk_player.h"
-	#include "te_firebullets.h"
+	#include "dmo_player.h"
 
 #endif
 
 
-class CWeaponShotgun : public CWeaponSDKBase
+class CWeaponShotgun : public CWeaponDMOBase
 {
 public:
-	DECLARE_CLASS( CWeaponShotgun, CWeaponSDKBase );
+	DECLARE_CLASS( CWeaponShotgun, CWeaponDMOBase );
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
 	
@@ -35,7 +34,7 @@ public:
 	virtual bool Reload();
 	virtual void WeaponIdle();
 
-	virtual SDKWeaponID GetWeaponID( void ) const		{ return WEAPON_SHOTGUN; }
+	virtual DMOWeaponID GetWeaponID( void ) const		{ return DMO_WEAPON_SHOTGUN; }
 
 
 private:
@@ -74,7 +73,7 @@ CWeaponShotgun::CWeaponShotgun()
 
 void CWeaponShotgun::PrimaryAttack()
 {
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 	if ( !pPlayer )
 		return;
 
@@ -152,7 +151,7 @@ void CWeaponShotgun::PrimaryAttack()
 
 bool CWeaponShotgun::Reload()
 {
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 
 	if (pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 || m_iClip1 == GetMaxClip1())
 		return true;
@@ -193,7 +192,7 @@ bool CWeaponShotgun::Reload()
 		SendReloadEvents();
 #endif
 		
-		CSDKPlayer *pPlayer = GetPlayerOwner();
+		CDMOPlayer *pPlayer = GetPlayerOwner();
 
 		if ( pPlayer )
 			 pPlayer->RemoveAmmo( 1, m_iPrimaryAmmoType );
@@ -207,7 +206,7 @@ bool CWeaponShotgun::Reload()
 
 void CWeaponShotgun::WeaponIdle()
 {
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 
 	if (m_flPumpTime && m_flPumpTime < gpGlobals->curtime)
 	{

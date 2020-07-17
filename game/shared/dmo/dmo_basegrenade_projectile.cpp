@@ -5,14 +5,14 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "sdk_basegrenade_projectile.h"
+#include "dmo_basegrenade_projectile.h"
 
 float GetCurrentGravity( void );
 
 
 #ifdef CLIENT_DLL
 
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 
 #else
 
@@ -75,7 +75,7 @@ END_NETWORK_TABLE()
 		{
 			if ( gpGlobals->curtime - m_flSpawnTime < 0.5 )
 			{
-				C_SDKPlayer *pPlayer = dynamic_cast<C_SDKPlayer*>( GetThrower() );
+				C_DMOPlayer *pPlayer = dynamic_cast<C_DMOPlayer*>( GetThrower() );
 				if ( pPlayer && pPlayer->m_PlayerAnimState->IsThrowingGrenade() )
 				{
 					return 0;

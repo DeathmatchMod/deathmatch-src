@@ -4,8 +4,8 @@
 //
 //=============================================================================//
 
-#ifndef VGUI_ROOTPANEL_SDK_H
-#define VGUI_ROOTPANEL_SDK_H
+#ifndef VGUI_ROOTPANEL_DMO_H
+#define VGUI_ROOTPANEL_DMO_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -26,12 +26,12 @@ typedef unsigned int EFFECT_HANDLE;
 // Purpose: Sits between engine and client .dll panels
 //  Responsible for drawing screen overlays
 //-----------------------------------------------------------------------------
-class C_SDKRootPanel : public vgui::Panel
+class C_DMORootPanel : public vgui::Panel
 {
 	typedef vgui::Panel BaseClass;
 public:
-						C_SDKRootPanel( vgui::VPANEL parent );
-	virtual				~C_SDKRootPanel( void );
+						C_DMORootPanel( vgui::VPANEL parent );
+	virtual				~C_DMORootPanel( void );
 
 	// Draw Panel effects here
 	virtual void		PostChildPaint();
@@ -53,4 +53,4 @@ private:
 };
 
 
-#endif // VGUI_ROOTPANEL_SDK_H
+#endif // VGUI_ROOTPANEL_DMO_H

@@ -4,8 +4,8 @@
 //
 //=============================================================================//
 
-#ifndef SDK_PLAYERANIMSTATE_H
-#define SDK_PLAYERANIMSTATE_H
+#ifndef DMO_PLAYERANIMSTATE_H
+#define DMO_PLAYERANIMSTATE_H
 #ifdef _WIN32
 #pragma once
 #endif
@@ -18,14 +18,14 @@
 
 #ifdef CLIENT_DLL
 	class C_BaseAnimatingOverlay;
-	class C_WeaponSDKBase;
+	class C_WeaponDMOBase;
 	#define CBaseAnimatingOverlay C_BaseAnimatingOverlay
-	#define CWeaponSDKBase C_WeaponSDKBase
-	#define CSDKPlayer C_SDKPlayer
+	#define CWeaponDMOBase C_WeaponDMOBase
+	#define CDMOPlayer C_DMOPlayer
 #else
 	class CBaseAnimatingOverlay;
-	class CWeaponSDKBase; 
-	class CSDKPlayer;
+	class CWeaponDMOBase; 
+	class CDMOPlayer;
 #endif
 
 
@@ -45,7 +45,7 @@ enum PlayerAnimEvent_t
 };
 
 
-class ISDKPlayerAnimState : virtual public IPlayerAnimState
+class IDMOPlayerAnimState : virtual public IPlayerAnimState
 {
 public:
 	// This is called by both the client and the server in the same way to trigger events for
@@ -57,20 +57,20 @@ public:
 };
 
 
-// This abstracts the differences between SDK players and hostages.
-class ISDKPlayerAnimStateHelpers
+// This abstracts the differences between DMO players and hostages.
+class IDMOPlayerAnimStateHelpers
 {
 public:
-	virtual CWeaponSDKBase* SDKAnim_GetActiveWeapon() = 0;
-	virtual bool SDKAnim_CanMove() = 0;
+	virtual CWeaponDMOBase* DMOAnim_GetActiveWeapon() = 0;
+	virtual bool DMOAnim_CanMove() = 0;
 };
 
 
-ISDKPlayerAnimState* CreatePlayerAnimState( CBaseAnimatingOverlay *pEntity, ISDKPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences );
+IDMOPlayerAnimState* CreatePlayerAnimState( CBaseAnimatingOverlay *pEntity, IDMOPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences );
 
 // If this is set, then the game code needs to make sure to send player animation events
 // to the local player if he's the one being watched.
 extern ConVar cl_showanimstate;
 
 
-#endif // SDK_PLAYERANIMSTATE_H
+#endif // DMO_PLAYERANIMSTATE_H

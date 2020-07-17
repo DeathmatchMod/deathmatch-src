@@ -4,31 +4,31 @@
 //
 //=============================================================================//
 
-#ifndef C_SDK_PLAYER_H
-#define C_SDK_PLAYER_H
+#ifndef C_DMO_PLAYER_H
+#define C_DMO_PLAYER_H
 #ifdef _WIN32
 #pragma once
 #endif
 
 
-#include "sdk_playeranimstate.h"
+#include "dmo_playeranimstate.h"
 #include "c_baseplayer.h"
-#include "sdk_shareddefs.h"
+#include "dmo_shareddefs.h"
 #include "baseparticleentity.h"
 
 
-class C_SDKPlayer : public C_BasePlayer, public ISDKPlayerAnimStateHelpers
+class C_DMOPlayer : public C_BasePlayer, public IDMOPlayerAnimStateHelpers
 {
 public:
-	DECLARE_CLASS( C_SDKPlayer, C_BasePlayer );
+	DECLARE_CLASS( C_DMOPlayer, C_BasePlayer );
 	DECLARE_CLIENTCLASS();
 	DECLARE_PREDICTABLE();
 	DECLARE_INTERPOLATION();
 
-	C_SDKPlayer();
-	~C_SDKPlayer();
+	C_DMOPlayer();
+	~C_DMOPlayer();
 
-	static C_SDKPlayer* GetLocalSDKPlayer();
+	static C_DMOPlayer* GetLocalDMOPlayer();
 
 	virtual const QAngle& GetRenderAngles();
 	virtual void UpdateClientSideAnimation();
@@ -39,14 +39,14 @@ public:
 // Called by shared code.
 public:
 	
-	// ISDKPlayerAnimState overrides.
-	virtual CWeaponSDKBase* SDKAnim_GetActiveWeapon();
-	virtual bool SDKAnim_CanMove();
+	// IDMOPlayerAnimState overrides.
+	virtual CWeaponDMOBase* DMOAnim_GetActiveWeapon();
+	virtual bool DMOAnim_CanMove();
 
 	void DoAnimationEvent( PlayerAnimEvent_t event, int nData = 0 );
 	bool ShouldDraw();
 
-	ISDKPlayerAnimState *m_PlayerAnimState;
+	IDMOPlayerAnimState *m_PlayerAnimState;
 
 	QAngle	m_angEyeAngles;
 	CInterpolatedVar< QAngle >	m_iv_angEyeAngles;
@@ -56,10 +56,10 @@ public:
 
 	EHANDLE	m_hRagdoll;
 
-	CWeaponSDKBase *GetActiveSDKWeapon() const;
+	CWeaponDMOBase *GetActiveDMOWeapon() const;
 
 	C_BaseAnimating *BecomeRagdollOnClient();
-	IRagdoll* C_SDKPlayer::GetRepresentativeRagdoll() const;
+	IRagdoll* C_DMOPlayer::GetRepresentativeRagdoll() const;
 
 	void FireBullet( 
 		Vector vecSrc, 
@@ -73,15 +73,15 @@ public:
 		float y );
 
 private:
-	C_SDKPlayer( const C_SDKPlayer & );
+	C_DMOPlayer( const C_DMOPlayer & );
 };
 
 
-inline C_SDKPlayer* ToSDKPlayer( CBaseEntity *pPlayer )
+inline C_DMOPlayer* ToDMOPlayer( CBaseEntity *pPlayer )
 {
-	Assert( dynamic_cast< C_SDKPlayer* >( pPlayer ) != NULL );
-	return static_cast< C_SDKPlayer* >( pPlayer );
+	Assert( dynamic_cast< C_DMOPlayer* >( pPlayer ) != NULL );
+	return static_cast< C_DMOPlayer* >( pPlayer );
 }
 
 
-#endif // C_SDK_PLAYER_H
+#endif // C_DMO_PLAYER_H

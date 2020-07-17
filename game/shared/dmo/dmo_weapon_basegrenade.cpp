@@ -5,21 +5,21 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "weapon_sdkbase.h"
+#include "dmo_weapon_base.h"
 #include "gamerules.h"
 #include "npcevent.h"
 #include "engine/IEngineSound.h"
-#include "weapon_basesdkgrenade.h"
+#include "dmo_weapon_basegrenade.h"
 #include "in_buttons.h"	
 
 
 #ifdef CLIENT_DLL
 
-	#include "c_sdk_player.h"
+	#include "c_dmo_player.h"
 
 #else
 
-	#include "sdk_player.h"
+	#include "dmo_player.h"
 	#include "items.h"
 
 #endif
@@ -28,9 +28,9 @@
 #define GRENADE_TIMER	1.5f //Seconds
 
 
-IMPLEMENT_NETWORKCLASS_ALIASED( BaseSDKGrenade, DT_BaseSDKGrenade )
+IMPLEMENT_NETWORKCLASS_ALIASED( BaseDMOGrenade, DT_BaseDMOGrenade )
 
-BEGIN_NETWORK_TABLE(CBaseSDKGrenade, DT_BaseSDKGrenade)
+BEGIN_NETWORK_TABLE(CBaseDMOGrenade, DT_BaseDMOGrenade)
 
 #ifndef CLIENT_DLL
 	SendPropBool( SENDINFO(m_bRedraw) ),
@@ -45,16 +45,16 @@ BEGIN_NETWORK_TABLE(CBaseSDKGrenade, DT_BaseSDKGrenade)
 END_NETWORK_TABLE()
 
 #ifdef CLIENT_DLL
-BEGIN_PREDICTION_DATA( CBaseSDKGrenade )
+BEGIN_PREDICTION_DATA( CBaseDMOGrenade )
 	DEFINE_PRED_FIELD( m_bRedraw, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_bRedraw, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 END_PREDICTION_DATA()
 #endif
 
-LINK_ENTITY_TO_CLASS( weapon_basesdkgrenade, CBaseSDKGrenade );
+LINK_ENTITY_TO_CLASS( weapon_basesdkgrenade, CBaseDMOGrenade );
 
 
-CBaseSDKGrenade::CBaseSDKGrenade()
+CBaseDMOGrenade::CBaseDMOGrenade()
 {
 	m_bRedraw = false;
 	m_bPinPulled = false;
@@ -64,7 +64,7 @@ CBaseSDKGrenade::CBaseSDKGrenade()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseSDKGrenade::Precache()
+void CBaseDMOGrenade::Precache()
 {
 	BaseClass::Precache();
 }
@@ -72,7 +72,7 @@ void CBaseSDKGrenade::Precache()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-bool CBaseSDKGrenade::Deploy()
+bool CBaseDMOGrenade::Deploy()
 {
 	m_bRedraw = false;
 	m_bPinPulled = false;
@@ -85,7 +85,7 @@ bool CBaseSDKGrenade::Deploy()
 // Purpose: 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool CBaseSDKGrenade::Holster( CBaseCombatWeapon *pSwitchingTo )
+bool CBaseDMOGrenade::Holster( CBaseCombatWeapon *pSwitchingTo )
 {
 	m_bRedraw = false;
 	m_bPinPulled = false; // when this is holstered make sure the pin isn’t pulled.
@@ -94,7 +94,7 @@ bool CBaseSDKGrenade::Holster( CBaseCombatWeapon *pSwitchingTo )
 #ifndef CLIENT_DLL
 	// If they attempt to switch weapons before the throw animation is done, 
 	// allow it, but kill the weapon if we have to.
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 
 	if( pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0 )
 	{
@@ -110,12 +110,12 @@ bool CBaseSDKGrenade::Holster( CBaseCombatWeapon *pSwitchingTo )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseSDKGrenade::PrimaryAttack()
+void CBaseDMOGrenade::PrimaryAttack()
 {
 	if ( m_bRedraw || m_bPinPulled )
 		return;
 
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 	if ( !pPlayer || pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 )
 		return;
 
@@ -133,12 +133,12 @@ void CBaseSDKGrenade::PrimaryAttack()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseSDKGrenade::SecondaryAttack()
+void CBaseDMOGrenade::SecondaryAttack()
 {
 	if ( m_bRedraw )
 		return;
 
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 	
 	if ( pPlayer == NULL )
 		return;
@@ -165,7 +165,7 @@ void CBaseSDKGrenade::SecondaryAttack()
 // Purpose: 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool CBaseSDKGrenade::Reload()
+bool CBaseDMOGrenade::Reload()
 {
 	if ( ( m_bRedraw ) && ( m_flNextPrimaryAttack <= gpGlobals->curtime ) && ( m_flNextSecondaryAttack <= gpGlobals->curtime ) )
 	{
@@ -185,9 +185,9 @@ bool CBaseSDKGrenade::Reload()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CBaseSDKGrenade::ItemPostFrame()
+void CBaseDMOGrenade::ItemPostFrame()
 {
-	CSDKPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer *pPlayer = GetPlayerOwner();
 	if ( !pPlayer )
 		return;
 
@@ -242,34 +242,34 @@ void CBaseSDKGrenade::ItemPostFrame()
 
 #ifdef CLIENT_DLL
 
-	void CBaseSDKGrenade::DecrementAmmo( CBaseCombatCharacter *pOwner )
+	void CBaseDMOGrenade::DecrementAmmo( CBaseCombatCharacter *pOwner )
 	{
 	}
 
-	void CBaseSDKGrenade::DropGrenade()
-	{
-		m_bRedraw = true;
-		m_fThrowTime = 0.0f;
-	}
-
-	void CBaseSDKGrenade::ThrowGrenade()
+	void CBaseDMOGrenade::DropGrenade()
 	{
 		m_bRedraw = true;
 		m_fThrowTime = 0.0f;
 	}
 
-	void CBaseSDKGrenade::StartGrenadeThrow()
+	void CBaseDMOGrenade::ThrowGrenade()
+	{
+		m_bRedraw = true;
+		m_fThrowTime = 0.0f;
+	}
+
+	void CBaseDMOGrenade::StartGrenadeThrow()
 	{
 		m_fThrowTime = gpGlobals->curtime + 0.1f;
 	}
 
 #else
 
-	BEGIN_DATADESC( CBaseSDKGrenade )
+	BEGIN_DATADESC( CBaseDMOGrenade )
 		DEFINE_FIELD( m_bRedraw, FIELD_BOOLEAN ),
 	END_DATADESC()
 
-	int CBaseSDKGrenade::CapabilitiesGet()
+	int CBaseDMOGrenade::CapabilitiesGet()
 	{
 		return bits_CAP_WEAPON_RANGE_ATTACK1; 
 	}
@@ -278,17 +278,17 @@ void CBaseSDKGrenade::ItemPostFrame()
 	// Purpose: 
 	// Input  : *pOwner - 
 	//-----------------------------------------------------------------------------
-	void CBaseSDKGrenade::DecrementAmmo( CBaseCombatCharacter *pOwner )
+	void CBaseDMOGrenade::DecrementAmmo( CBaseCombatCharacter *pOwner )
 	{
 		pOwner->RemoveAmmo( 1, m_iPrimaryAmmoType );
 	}
 
-	void CBaseSDKGrenade::StartGrenadeThrow()
+	void CBaseDMOGrenade::StartGrenadeThrow()
 	{
 		m_fThrowTime = gpGlobals->curtime + 0.1f;
 	}
 
-	void CBaseSDKGrenade::ThrowGrenade()
+	void CBaseDMOGrenade::ThrowGrenade()
 	{
 		CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 		if ( !pPlayer )
@@ -328,7 +328,7 @@ void CBaseSDKGrenade::ItemPostFrame()
 		m_fThrowTime = 0.0f;
 	}
 
-	void CBaseSDKGrenade::DropGrenade()
+	void CBaseDMOGrenade::DropGrenade()
 	{
 		CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 		if ( !pPlayer )
@@ -349,12 +349,12 @@ void CBaseSDKGrenade::ItemPostFrame()
 		m_fThrowTime = 0.0f;
 	}
 
-	void CBaseSDKGrenade::EmitGrenade( Vector vecSrc, QAngle vecAngles, Vector vecVel, AngularImpulse angImpulse, CBasePlayer *pPlayer )
+	void CBaseDMOGrenade::EmitGrenade( Vector vecSrc, QAngle vecAngles, Vector vecVel, AngularImpulse angImpulse, CBasePlayer *pPlayer )
 	{
-		Assert( 0 && "CBaseSDKGrenade::EmitGrenade should not be called. Make sure to implement this in your subclass!\n" );
+		Assert( 0 && "CBaseDMOGrenade::EmitGrenade should not be called. Make sure to implement this in your subclass!\n" );
 	}
 
-	bool CBaseSDKGrenade::AllowsAutoSwitchFrom( void ) const
+	bool CBaseDMOGrenade::AllowsAutoSwitchFrom( void ) const
 	{
 		return !m_bPinPulled;
 	}
