@@ -81,7 +81,7 @@ ENV_CFLAGS := $(CFLAGS)
 ENV_CXXFLAGS := $(CXXFLAGS)
 CPPFLAGS = $(DEFINES) $(addprefix -I, $(abspath $(INCLUDEDIRS) ))
 BASE_CFLAGS = $(ARCH_FLAGS) $(CPPFLAGS) $(WARN_FLAGS) -fpermissive -fvisibility=$(SymbolVisibility) $(OptimizerLevel) -pipe $(GCC_ExtraCompilerFlags) -Usprintf -Ustrncpy -UPROTECTED_THINGS_ENABLE
-BASE_CXXFLAGS = -std=c++11 -fpermissive -fdiagnostics-color=auto
+BASE_CXXFLAGS = -std=c++11 -fpermissive -fdiagnostics-color=always
 # Additional CXXFLAGS when compiling PCH files
 PCH_CXXFLAGS =
 
@@ -193,7 +193,7 @@ else ifeq ($(GCC_VER),-4.8)
 	# WARN_FLAGS += -Wno-unused-function
 endif
 
-WARN_FLAGS += -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-value
+WARN_FLAGS += -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-value -Wno-narrowing
 WARN_FLAGS += -Wno-invalid-offsetof -Wno-float-equal -Wno-reorder -Werror=return-type
 WARN_FLAGS += -fdiagnostics-show-option -Wformat -Wformat-security
 
