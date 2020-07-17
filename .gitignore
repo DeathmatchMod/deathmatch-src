@@ -1,6 +1,7 @@
 # Files to ignore when considering what GIT should commit.
 
 # Visual Studio 
+.vs/
 *.suo
 *.user
 *.sln.docstates
@@ -17,7 +18,7 @@ ipch
 *.sdf
 *.opensdf
 *.idb
-*.vcxproj
+*.vcxproj*
 *.sln
 
 # OSX/Linux build products
@@ -55,4 +56,3 @@ config.cfg
 
 # shader files
 *.tmp
-
