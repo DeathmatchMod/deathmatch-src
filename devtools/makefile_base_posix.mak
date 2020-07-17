@@ -94,7 +94,9 @@ ifeq ($(CLANG_BUILD),1)
 	PCH_CXXFLAGS += -emit-pch
 else
 	# GCC specific - better PCH behavior w/ccache and better debugging information
-	BASE_CFLAGS += -fpch-preprocess -fvar-tracking-assignments
+	BASE_CFLAGS += -fpch-preprocess -fvar-tracking-assignments 
+	# !!! ABI compatibility, so we don't need an OLD ASS compiler to build this shit
+	BASE_CXXFLAGS += -fabi-compat-version=2
 endif
 
 DEFINES += -DVPROF_LEVEL=1 -DGNUC -DNO_HOOK_MALLOC
