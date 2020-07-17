@@ -1,0 +1,107 @@
+//-----------------------------------------------------------------------------
+//	CLIENT_DMO.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME 	"dmo"
+$Macro SHARED       "$SRCDIR\game\shared"
+
+$Include "$SRCDIR\game\client\client_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories		"$BASE;.\dmo;dmo\hud;dmo\vgui;$SHARED\dmo"
+		$PreprocessorDefinitions			"$BASE;DMO;DMO_CLIENT"
+	}
+}
+
+$Project "Client (Deathmatch)"
+{
+	$Folder	"Source Files"
+	{
+		-$File	"$SHARED\weapon_parse_default.cpp"
+
+		$File	"hud_voicestatus.cpp"
+		$File	"$SHARED\predicted_viewmodel.cpp"
+		$File	"$SHARED\predicted_viewmodel.h"
+		
+		$Folder	"Deathmatch"
+		{
+			$Folder	"Shared"
+			{
+				$File "$SHARED\dmo\dmo_basegrenade_projectile.cpp"
+				$File "$SHARED\dmo\dmo_basegrenade_projectile.h"
+				$File "$SHARED\dmo\dmo_fx_shared.cpp"
+				$File "$SHARED\dmo\dmo_fx_shared.h"
+				$File "$SHARED\dmo\dmo_gamemovement.cpp"
+				$File "$SHARED\dmo\dmo_gamerules.cpp"
+				$File "$SHARED\dmo\dmo_gamerules.h"
+				$File "$SHARED\dmo\dmo_player_shared.cpp"
+				$File "$SHARED\dmo\dmo_player_shared.h"
+				$File "$SHARED\dmo\dmo_playeranimstate.cpp"
+				$File "$SHARED\dmo\dmo_playeranimstate.h"
+				$File "$SHARED\dmo\dmo_playerclass_info_parse.cpp"
+				$File "$SHARED\dmo\dmo_playerclass_info_parse.h"
+				$File "$SHARED\dmo\dmo_shareddefs.cpp"
+				$File "$SHARED\dmo\dmo_shareddefs.h"
+				$File "$SHARED\dmo\dmo_usermessages.cpp"
+				$File "$SHARED\dmo\dmo_weapon_parse.cpp"
+				$File "$SHARED\dmo\dmo_weapon_parse.h"
+				
+			}
+
+			$Folder	"Weapons"
+			{
+				$Folder "Bases"
+				{
+					$File "$SHARED\dmo\dmo_weapon_base.cpp"
+					$File "$SHARED\dmo\dmo_weapon_base.h"
+					$File "$SHARED\dmo\dmo_weapon_basegrenade.cpp"
+					$File "$SHARED\dmo\dmo_weapon_basegrenade.h"
+					$File "$SHARED\dmo\dmo_weapon_melee.cpp"
+					$File "$SHARED\dmo\dmo_weapon_melee.h"
+				}
+			
+				$File "$SHARED\dmo\weapon_crowbar.cpp"
+				$File "$SHARED\dmo\weapon_grenade.cpp"
+				$File "$SHARED\dmo\weapon_grenade.h"
+				$File "$SHARED\dmo\weapon_mp5.cpp"
+				$File "$SHARED\dmo\weapon_pistol.cpp"
+				$File "$SHARED\dmo\weapon_shotgun.cpp"
+				
+			}
+			
+			$Folder	"Hud"
+			{
+				$File "dmo\hud\dmo_hud_ammo.cpp"
+				$File "dmo\hud\dmo_hud_chat.cpp"
+				$File "dmo\hud\dmo_hud_chat.h"
+				$File "dmo\hud\dmo_hud_health.cpp"
+				$File "dmo\hud\dmo_hud_message.cpp"
+				$File "dmo\hud\dmo_hud_weaponselection.cpp"
+			}
+			
+			$Folder	"VGUI"
+			{
+				$File "dmo\vgui\dmoviewport.cpp"
+				$File "dmo\vgui\dmoviewport.h"
+				$File "dmo\vgui\vgui_rootpanel_dmo.cpp"
+				$File "dmo\vgui\vgui_rootpanel_dmo.h"
+			}
+
+			$File "dmo\c_dmo_player.cpp"
+			$File "dmo\c_dmo_player.h"
+			$File "dmo\c_dmo_team.cpp"
+			$File "dmo\c_dmo_team.h"
+			$File "dmo\clientmode_dmo.cpp"
+			$File "dmo\clientmode_dmo.h"
+			$File "dmo\dmo_in_main.cpp"
+			$File "dmo\dmo_prediction.cpp"
+			
+		}
+	}
+}
