@@ -39,7 +39,7 @@ PRECACHE_WEAPON_REGISTER( weapon_grenade );
 
 #ifdef GAME_DLL
 
-#define GRENADE_MODEL "models/Weapons/w_eq_fraggrenade_thrown.mdl"
+#define GRENADE_MODEL "models/Weapons/w_grenade.mdl"
 
 class CGrenadeProjectile : public CBaseGrenadeProjectile
 {
