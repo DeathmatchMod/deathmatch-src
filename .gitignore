@@ -30,6 +30,9 @@ obj*/
 !utils/smdlexp/smdlexp.mak
 *.project
 CMakeLists.txt
+*.workspace
+.vscode
+compile_options.txt
 
 # VPC products
 *.vpc.sentinel
