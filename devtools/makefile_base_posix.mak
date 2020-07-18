@@ -63,7 +63,7 @@ ifeq ($(CFG), release)
 		OptimizerLevel_CompilerSpecific += -fpredictive-commoning -funswitch-loops
 	endif
 else
-	OptimizerLevel_CompilerSpecific = -O0
+	OptimizerLevel_CompilerSpecific = -O0 -ffast-math
 	#-O1 -finline-functions
 endif
 
@@ -71,7 +71,7 @@ endif
 # until we can ensure that every user has libraries built against the new C++11
 # ABI. Further reading here:
 # https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_dual_abi.html
-DEFINES += -D_GLIBCXX_USE_CXX11_ABI=0
+DEFINES += -D_GLIBCXX_USE_CXX11_ABI=0 -DNO_MALLOC_OVERRIDE
 
 # CPPFLAGS == "c/c++ *preprocessor* flags" - not "cee-plus-plus flags"
 ARCH_FLAGS = 

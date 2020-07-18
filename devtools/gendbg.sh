@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Don't want to separate the debug stuff, sorry
+exit 0
+
 OBJCOPY=$STEAM_RUNTIME_PATH/bin/objcopy
 
 function usage {
