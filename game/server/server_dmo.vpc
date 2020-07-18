@@ -75,7 +75,7 @@ $Project "Server (Deathmatch)"
 				$File "$SHARED\dmo\weapon_mp5.cpp"
 				$File "$SHARED\dmo\weapon_pistol.cpp"
 				$File "$SHARED\dmo\weapon_shotgun.cpp"
-				
+				$File "$SHARED\dmo\weapon_blackhole.cpp"
 			}
 		
 			$File "dmo\dmo_bot_temp.cpp"
