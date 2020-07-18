@@ -31,7 +31,7 @@
 
 // viewport definitions
 #include <baseviewport.h>
-#include "DMOViewport.h"
+#include "dmoviewport.h"
 
 #include "vguicenterprint.h"
 #include "text_message.h"

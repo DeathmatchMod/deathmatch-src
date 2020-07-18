@@ -59,7 +59,7 @@ public:
 	CWeaponDMOBase *GetActiveDMOWeapon() const;
 
 	C_BaseAnimating *BecomeRagdollOnClient();
-	IRagdoll* C_DMOPlayer::GetRepresentativeRagdoll() const;
+	IRagdoll* GetRepresentativeRagdoll() const;
 
 	void FireBullet( 
 		Vector vecSrc, 
