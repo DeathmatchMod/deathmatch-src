@@ -5,6 +5,8 @@
  */ 
 #include <math.h>
 
+#if __GNUC__ > 5
+
 extern "C" float __powf_finite(float x, float y)
 {
 	return powf(x, y);
@@ -44,3 +46,5 @@ extern "C" double __log_finite(double f)
 {
 	return log(f);
 }
+
+#endif
