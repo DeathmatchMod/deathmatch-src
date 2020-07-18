@@ -46,7 +46,7 @@
 //
 // Can your players go prone?
 // define DMO_USE_PRONE
-#define DMO_USE_PRONE
+//#define DMO_USE_PRONE
 
 //=====================
 // EXTRA WEAPON OPTIONS
@@ -122,7 +122,7 @@ enum sdkteams_e
 
 #endif // DMO_USE_PLAYERCLASSES
 
-#define DMO_PLAYER_MODEL "models/player/american_rifleman.mdl"
+#define DMO_PLAYER_MODEL "models/police.mdl"
 
 //Tony; We need to precache all possible player models that we're going to use
 extern const char *pszPossiblePlayerModels[];

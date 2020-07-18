@@ -16,8 +16,9 @@
 #include "dmo_shareddefs.h"
 #include "baseparticleentity.h"
 
-
-class C_DMOPlayer : public C_BasePlayer, public IDMOPlayerAnimStateHelpers
+class C_WeaponDMOBase;
+#define CWeaponDMOBase C_WeaponDMOBase
+class C_DMOPlayer : public C_BasePlayer
 {
 public:
 	DECLARE_CLASS( C_DMOPlayer, C_BasePlayer );
@@ -46,7 +47,7 @@ public:
 	void DoAnimationEvent( PlayerAnimEvent_t event, int nData = 0 );
 	bool ShouldDraw();
 
-	IDMOPlayerAnimState *m_PlayerAnimState;
+	CDMOPlayerAnimState *m_PlayerAnimState;
 
 	QAngle	m_angEyeAngles;
 	CInterpolatedVar< QAngle >	m_iv_angEyeAngles;

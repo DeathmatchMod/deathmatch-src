@@ -147,9 +147,9 @@ void FX_FireBullets(
 	if ( pPlayer && !pPlayer->IsDormant() )
 	{
 		if ( iMode == Primary_Mode )
-			pPlayer->m_PlayerAnimState->DoAnimationEvent( PLAYERANIMEVENT_FIRE_GUN_PRIMARY );
+			pPlayer->m_PlayerAnimState->DoAnimationEvent( PLAYERANIMEVENT_ATTACK_PRIMARY );
 		else
-			pPlayer->m_PlayerAnimState->DoAnimationEvent( PLAYERANIMEVENT_FIRE_GUN_SECONDARY );
+			pPlayer->m_PlayerAnimState->DoAnimationEvent( PLAYERANIMEVENT_ATTACK_SECONDARY );
 	}
 #else
 	

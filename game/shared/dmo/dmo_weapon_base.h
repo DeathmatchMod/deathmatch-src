@@ -10,9 +10,15 @@
 #pragma once
 #endif
 
-#include "dmo_playeranimstate.h"
+#include "Multiplayer/multiplayer_animstate.h"
 #include "dmo_weapon_parse.h"
 #include "dmo_shareddefs.h"
+
+#ifdef CLIENT_DLL
+	#include "c_dmo_player.h"
+#else
+	#include "dmo_player.h"
+#endif
 
 #if defined( CLIENT_DLL )
 	#define CWeaponDMOBase C_WeaponDMOBase

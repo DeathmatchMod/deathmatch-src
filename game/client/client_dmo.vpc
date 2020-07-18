@@ -31,6 +31,9 @@ $Project "Client (Deathmatch)"
 		$File   "$SHARED\playerclass_info_parse.cpp"
 		$File   "$SHARED\playerclass_info_parse.h"
 		
+		$File "$SHARED\Multiplayer\multiplayer_animstate.cpp"
+		$File "$SHARED\Multiplayer\multiplayer_animstate.h"
+		
 		$Folder	"Deathmatch"
 		{
 			$Folder	"Shared"

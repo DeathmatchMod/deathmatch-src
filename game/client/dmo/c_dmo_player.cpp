@@ -306,7 +306,7 @@ IRagdoll* C_DMOPlayer::GetRepresentativeRagdoll() const
 C_DMOPlayer::C_DMOPlayer() : 
 	m_iv_angEyeAngles( "C_DMOPlayer::m_iv_angEyeAngles" )
 {
-	m_PlayerAnimState = CreatePlayerAnimState( this, this, LEGANIM_9WAY, true );
+	m_PlayerAnimState = CreatePlayerAnimState( this );
 
 	m_angEyeAngles.Init();
 	AddVar( &m_angEyeAngles, &m_iv_angEyeAngles, LATCH_SIMULATION_VAR );
@@ -375,7 +375,7 @@ void C_DMOPlayer::OnDataChanged( DataUpdateType_t type )
 
 void C_DMOPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 {
-	if ( event == PLAYERANIMEVENT_THROW_GRENADE )
+	if ( event == PLAYERANIMEVENT_GRENADE1_THROW)
 	{
 		// Let the server handle this event. It will update m_iThrowGrenadeCounter and the client will
 		// pick up the event in CCSPlayerAnimState.

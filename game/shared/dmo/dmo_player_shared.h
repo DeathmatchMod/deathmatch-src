@@ -11,7 +11,7 @@
 #endif
 
 #include "networkvar.h"
-#include "weapon_sdkbase.h"
+#include "dmo_weapon_base.h"
 
 #ifdef CLIENT_DLL
 class C_DMOPlayer;

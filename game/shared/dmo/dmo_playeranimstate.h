@@ -13,60 +13,39 @@
 
 #include "convar.h"
 #include "iplayeranimstate.h"
-#include "base_playeranimstate.h"
+#include "Multiplayer/multiplayer_animstate.h"
 
 
 #ifdef CLIENT_DLL
-	class C_BaseAnimatingOverlay;
-	class C_WeaponDMOBase;
-	#define CBaseAnimatingOverlay C_BaseAnimatingOverlay
-	#define CWeaponDMOBase C_WeaponDMOBase
+	class C_DMOPlayer;
 	#define CDMOPlayer C_DMOPlayer
 #else
-	class CBaseAnimatingOverlay;
-	class CWeaponDMOBase; 
 	class CDMOPlayer;
 #endif
 
 
-// When moving this fast, he plays run anim.
-#define ARBITRARY_RUN_SPEED		175.0f
 
 
-enum PlayerAnimEvent_t
-{
-	PLAYERANIMEVENT_FIRE_GUN_PRIMARY=0,
-	PLAYERANIMEVENT_FIRE_GUN_SECONDARY,
-	PLAYERANIMEVENT_THROW_GRENADE,
-	PLAYERANIMEVENT_JUMP,
-	PLAYERANIMEVENT_RELOAD,
-	
-	PLAYERANIMEVENT_COUNT
-};
 
+// ------------------------------------------------------------------------------------------------ //
+// CDMOPlayerAnimState declaration.
+// ------------------------------------------------------------------------------------------------ //
 
-class IDMOPlayerAnimState : virtual public IPlayerAnimState
+class CDMOPlayerAnimState : public CMultiPlayerAnimState
 {
 public:
-	// This is called by both the client and the server in the same way to trigger events for
-	// players firing, jumping, throwing grenades, etc.
-	virtual void DoAnimationEvent( PlayerAnimEvent_t event, int nData = 0 ) = 0;
-	
-	// Returns true if we're playing the grenade prime or throw animation.
-	virtual bool IsThrowingGrenade() = 0;
+	DECLARE_CLASS(CDMOPlayerAnimState, CMultiPlayerAnimState);
+	CDMOPlayerAnimState(CBasePlayer* pPlayer, MultiPlayerMovementData_t& movementData) : CMultiPlayerAnimState(pPlayer, movementData) { }
+
+	void InitDMO(CDMOPlayer* pPlayer);
+	virtual Activity TranslateActivity(Activity actDesired);
+private:
+	CDMOPlayer* m_pPlayer;
 };
 
 
-// This abstracts the differences between DMO players and hostages.
-class IDMOPlayerAnimStateHelpers
-{
-public:
-	virtual CWeaponDMOBase* DMOAnim_GetActiveWeapon() = 0;
-	virtual bool DMOAnim_CanMove() = 0;
-};
 
-
-IDMOPlayerAnimState* CreatePlayerAnimState( CBaseAnimatingOverlay *pEntity, IDMOPlayerAnimStateHelpers *pHelpers, LegAnimType_t legAnimType, bool bUseAimSequences );
+CDMOPlayerAnimState* CreatePlayerAnimState( CDMOPlayer* pPlayer );
 
 // If this is set, then the game code needs to make sure to send player animation events
 // to the local player if he's the one being watched.

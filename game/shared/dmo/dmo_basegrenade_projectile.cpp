@@ -75,11 +75,14 @@ END_NETWORK_TABLE()
 		{
 			if ( gpGlobals->curtime - m_flSpawnTime < 0.5 )
 			{
+				/*
 				C_DMOPlayer *pPlayer = dynamic_cast<C_DMOPlayer*>( GetThrower() );
+				
 				if ( pPlayer && pPlayer->m_PlayerAnimState->IsThrowingGrenade() )
 				{
 					return 0;
 				}
+				*/
 			}
 		}
 

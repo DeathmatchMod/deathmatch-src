@@ -198,7 +198,7 @@ void CBaseDMOGrenade::ItemPostFrame()
 	// If they let go of the fire button, they want to throw the grenade.
 	if ( m_bPinPulled && !(pPlayer->m_nButtons & IN_ATTACK) ) 
 	{
-		pPlayer->DoAnimationEvent( PLAYERANIMEVENT_THROW_GRENADE );
+		pPlayer->DoAnimationEvent( PLAYERANIMEVENT_GRENADE1_THROW );
 
 		StartGrenadeThrow();
 		

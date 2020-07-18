@@ -15,11 +15,11 @@
 #include "dmo_playeranimstate.h"
 #include "dmo_shareddefs.h"
 
-
+class CWeaponDMOBase;
 //=============================================================================
 // >> DMO Game player
 //=============================================================================
-class CDMOPlayer : public CBasePlayer, public IDMOPlayerAnimStateHelpers
+class CDMOPlayer : public CBasePlayer
 {
 public:
 	DECLARE_CLASS( CDMOPlayer, CBasePlayer );
@@ -82,7 +82,7 @@ private:
 
 	void CreateRagdollEntity();
 
-	IDMOPlayerAnimState *m_PlayerAnimState;
+	CDMOPlayerAnimState *m_PlayerAnimState;
 };
 
 

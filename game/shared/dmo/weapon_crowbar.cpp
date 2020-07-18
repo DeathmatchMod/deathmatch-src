@@ -59,17 +59,17 @@ CWeaponCrowbar::CWeaponCrowbar()
 //Tony; todo; add ACT_MP_PRONE* activities, so we have them.
 acttable_t CWeaponCrowbar::m_acttable[] = 
 {
-	{ ACT_MP_STAND_IDLE,					ACT_DOD_STAND_AIM_SPADE,				false },
-	{ ACT_MP_CROUCH_IDLE,					ACT_DOD_CROUCH_AIM_SPADE,				false },
+	{ ACT_MP_STAND_IDLE,					ACT_HL2MP_IDLE_MELEE,				false },
+	{ ACT_MP_CROUCH_IDLE,					ACT_HL2MP_IDLE_CROUCH_MELEE,				false },
+	{ ACT_MP_JUMP,							ACT_HL2MP_JUMP_MELEE,					false },
 
-	{ ACT_MP_RUN,							ACT_DOD_RUN_AIM_SPADE,					false },
-	{ ACT_MP_WALK,							ACT_DOD_WALK_AIM_SPADE,					false },
-	{ ACT_MP_CROUCHWALK,					ACT_DOD_CROUCHWALK_AIM_SPADE,			false },
-	{ ACT_SPRINT,							ACT_DOD_SPRINT_AIM_SPADE,				false },
+	{ ACT_MP_RUN,							ACT_HL2MP_RUN_MELEE,					false },
+	//{ ACT_MP_WALK,							ACT_DOD_WALK_AIM_SPADE,					false },
+	{ ACT_MP_CROUCHWALK,					ACT_HL2MP_WALK_CROUCH_MELEE,			false },
+	//{ ACT_SPRINT,							ACT_DOD_SPRINT_AIM_SPADE,				false },
 
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,		ACT_DOD_PRIMARYATTACK_SPADE,			false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,		ACT_DOD_PRIMARYATTACK_SPADE,			false },
+	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,		ACT_RANGE_ATTACK_SLAM,			false },
+	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,		ACT_RANGE_ATTACK_SLAM,			false },
 };
-
 IMPLEMENT_ACTTABLE( CWeaponCrowbar );
 

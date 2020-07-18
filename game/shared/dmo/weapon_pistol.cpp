@@ -27,6 +27,7 @@ public:
 	DECLARE_PREDICTABLE();
 	DECLARE_ACTTABLE();
 	
+
 	CWeaponPistol();
 
 	virtual DMOWeaponID GetWeaponID( void ) const		{ return DMO_WEAPON_PISTOL; }
@@ -48,29 +49,20 @@ END_PREDICTION_DATA()
 LINK_ENTITY_TO_CLASS( weapon_pistol, CWeaponPistol );
 PRECACHE_WEAPON_REGISTER( weapon_pistol );
 
-
+acttable_t CWeaponPistol::m_acttable[] =
+{
+	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_PISTOL,						false },
+	{ ACT_MP_RUN,						ACT_HL2MP_RUN_PISTOL,						false },
+	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_PISTOL,				false },
+	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_PISTOL,				false },
+	//{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_PISTOL,		false },
+	//{ ACT_HL2MP_GESTURE_RELOAD,		ACT_HL2MP_GESTURE_RELOAD_PISTOL,			false },
+	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_PISTOL,						false },
+	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_RANGE_ATTACK_PISTOL,					false },
+};
+IMPLEMENT_ACTTABLE(CWeaponPistol);
 
 CWeaponPistol::CWeaponPistol()
 {
 }
-
-//Tony; todo; add ACT_MP_PRONE* activities, so we have them.
-acttable_t CWeaponPistol::m_acttable[] = 
-{
-	{ ACT_MP_STAND_IDLE,					ACT_DOD_STAND_IDLE_PISTOL,				false },
-	{ ACT_MP_CROUCH_IDLE,					ACT_DOD_CROUCH_IDLE_PISTOL,				false },
-
-	{ ACT_MP_RUN,							ACT_DOD_RUN_AIM_PISTOL,					false },
-	{ ACT_MP_WALK,							ACT_DOD_WALK_AIM_PISTOL,				false },
-	{ ACT_MP_CROUCHWALK,					ACT_DOD_CROUCHWALK_AIM_PISTOL,			false },
-	{ ACT_SPRINT,							ACT_DOD_SPRINT_IDLE_PISTOL,				false },
-
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,		ACT_DOD_PRIMARYATTACK_PISTOL,			false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,		ACT_DOD_PRIMARYATTACK_PISTOL,			false },
-
-	{ ACT_MP_RELOAD_STAND,					ACT_DOD_RELOAD_PISTOL,					false },
-	{ ACT_MP_RELOAD_CROUCH,					ACT_DOD_RELOAD_CROUCH_PISTOL,			false },
-};
-
-IMPLEMENT_ACTTABLE( CWeaponPistol );
 

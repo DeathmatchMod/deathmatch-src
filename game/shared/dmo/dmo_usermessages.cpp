@@ -9,6 +9,9 @@
 #include "shake.h"
 #include "voice_gamemgr.h"
 
+// NVNT include to register in haptic user messages
+#include "haptics/haptic_msgs.h"
+
 void RegisterUserMessages()
 {
 	usermessages->Register( "Geiger", 1 );		// geiger info data
@@ -47,5 +50,8 @@ void RegisterUserMessages()
 	usermessages->Register( "GameMessage", -1 );
 
 	usermessages->Register("Rumble", 3);	// Send a rumble to a controller
+
+
+	RegisterHapticMessages();
 }
 

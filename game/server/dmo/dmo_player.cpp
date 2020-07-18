@@ -138,7 +138,7 @@ ConCommand cc_CreatePredictionError( "CreatePredictionError", cc_CreatePredictio
 
 CDMOPlayer::CDMOPlayer()
 {
-	m_PlayerAnimState = CreatePlayerAnimState( this, this, LEGANIM_9WAY, true );
+	m_PlayerAnimState = CreatePlayerAnimState( this );
 
 	UseClientSideAnimation();
 	m_angEyeAngles.Init();
@@ -281,7 +281,7 @@ void CDMOPlayer::CreateRagdollEntity()
 
 void CDMOPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 {
-	if ( event == PLAYERANIMEVENT_THROW_GRENADE )
+	if ( event == PLAYERANIMEVENT_GRENADE1_THROW )
 	{
 		// Grenade throwing has to synchronize exactly with the player's grenade weapon going away,
 		// and events get delayed a bit, so we let CCSPlayerAnimState pickup the change to this
