@@ -13,11 +13,12 @@ $Configuration
 	$General	
 	{
 		$ConfigurationType				"Static Library (.lib)"
+		$GameOutputFile						"$OUTLIBDIR/$OUTLIBNAME$_STATICLIB_EXT"
 	}
 	
 	$Linker
 	{
-		$OutputFile						"$OUTLIBDIR/$OUTLIBNAME$_STATICLIB_EXT"
+		$OutputFile						"$(OBJ_DIR)/$OUTLIBNAME$_STATICLIB_EXT"
 	}
 }
 

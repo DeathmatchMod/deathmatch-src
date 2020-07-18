@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Don't want to separate the debug stuff, sorry
-exit 0
+
 
 OBJCOPY=$STEAM_RUNTIME_PATH/bin/objcopy
 
@@ -24,7 +24,8 @@ INFILE=$(basename $1)
 
 OUTFILEDIR=$INFILEDIR
 OUTFILE=$INFILE.dbg
-
+touch $OUTFILE
+exit 0
 while getopts "o:" opt; do
 	case $opt in
 		o)
@@ -44,4 +45,4 @@ $OBJCOPY "$INFILE" "$OUTFILE"
 $OBJCOPY --add-gnu-debuglink="$OUTFILE" "$INFILE"
 popd
 
-
+exit 0
