@@ -101,67 +101,41 @@ void CWeaponShotgun::PrimaryAttack()
 		return;
 	}
 
-	// Out of ammo?
-	if ( m_iClip1 <= 0 )
-	{
-		Reload();
-		if ( m_iClip1 == 0 )
-		{
-			PlayEmptySound();
-			m_flNextPrimaryAttack = gpGlobals->curtime + 0.2;
-		}
+	// MUST call sound before removing a round from the clip of a CMachineGun
+	WeaponSound(SINGLE);
 
-		return;
-	}
-
-	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
-
-	m_iClip1--;
 	pPlayer->DoMuzzleFlash();
 
+	SendWeaponAnim(ACT_VM_PRIMARYATTACK);
+
+	// Don't fire again until fire animation has completed
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_iClip1 -= 1;
+
 	// player "shoot" animation
-	pPlayer->SetAnimation( PLAYER_ATTACK1 );
+	pPlayer->SetAnimation(PLAYER_ATTACK1);
 
-	// Dispatch the FX right away with full accuracy.
-	FX_FireBullets( 
-		pPlayer->entindex(),
-		pPlayer->Weapon_ShootPosition(), 
-		pPlayer->EyeAngles() + 2.0f * pPlayer->GetPunchAngle(), 
-		GetWeaponID(),
-		Primary_Mode,
-		CBaseEntity::GetPredictionRandomSeed() & 255, // wrap it for network traffic so it's the same between client and server
-		0.0675 );
 
-	if (!m_iClip1 && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0)
+	Vector	vecSrc = pPlayer->Weapon_ShootPosition();
+	Vector	vecAiming = pPlayer->GetAutoaimVector(AUTOAIM_10DEGREES);
+
+	FireBulletsInfo_t info(7, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType);
+	info.m_pAttacker = pPlayer;
+
+	// Fire the bullets, and force the first shot to be perfectly accuracy
+	pPlayer->FireBullets(info);
+
+
+	QAngle punch;
+	punch.Init(SharedRandomFloat("shotgunpax", -2, -1), SharedRandomFloat("shotgunpay", -2, 2), 0);
+	pPlayer->ViewPunch(punch);
+
+	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{
 		// HEV suit - indicate out of ammo condition
-		pPlayer->SetSuitUpdate("!HEV_AMO0", false, 0);
+		pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
 	}
 
-	if (m_iClip1 != 0)
-		m_flPumpTime = gpGlobals->curtime + 0.5;
-
-	m_flNextPrimaryAttack = gpGlobals->curtime + 0.875;
-	m_flNextSecondaryAttack = gpGlobals->curtime + 0.875;
-	if (m_iClip1 != 0)
-		SetWeaponIdleTime( gpGlobals->curtime + 2.5 );
-	else
-		SetWeaponIdleTime( gpGlobals->curtime + 0.875 );
-	m_fInSpecialReload = 0;
-
-	// Update punch angles.
-	QAngle angle = pPlayer->GetPunchAngle();
-
-	if ( pPlayer->GetFlags() & FL_ONGROUND )
-	{
-		angle.x -= SharedRandomInt( "ShotgunPunchAngleGround", 4, 6 );
-	}
-	else
-	{
-		angle.x -= SharedRandomInt( "ShotgunPunchAngleAir", 8, 11 );
-	}
-
-	pPlayer->SetPunchAngle( angle );
 }
 
 
