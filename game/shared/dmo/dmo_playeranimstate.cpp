@@ -72,7 +72,8 @@ Activity CDMOPlayerAnimState::TranslateActivity(Activity actDesired)
 	Activity translatedAct = BaseClass::TranslateActivity(actDesired);
 	if (m_pPlayer->GetActiveDMOWeapon())
 	{
-		translatedAct = m_pPlayer->GetActiveDMOWeapon()->ActivityOverride(translatedAct, false);
+		bool tmp = false;
+		translatedAct = m_pPlayer->GetActiveDMOWeapon()->ActivityOverride(translatedAct, &tmp);
 	}
 
 	return translatedAct;
