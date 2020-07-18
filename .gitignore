@@ -1,5 +1,13 @@
 # Files to ignore when considering what GIT should commit.
 
+mathlib/*.a
+tier1/*.a
+vgui2/vgui_controls/*.a
+raytrace/*.a
+
+cmake-build*
+.idea
+
 # Visual Studio 
 .vs/
 *.suo
