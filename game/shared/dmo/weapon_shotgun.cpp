@@ -109,7 +109,10 @@ void CWeaponShotgun::PrimaryAttack()
 	SendWeaponAnim(ACT_VM_PRIMARYATTACK);
 
 	// Don't fire again until fire animation has completed
-	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	float flSequenceEndTime = gpGlobals->curtime + GetDMOWpnData().m_flCycleTime;
+	pPlayer->SetNextAttack(flSequenceEndTime);
+	m_flNextPrimaryAttack = m_flNextSecondaryAttack = flSequenceEndTime;
+
 	m_iClip1 -= 1;
 
 	// player "shoot" animation
@@ -121,6 +124,7 @@ void CWeaponShotgun::PrimaryAttack()
 
 	FireBulletsInfo_t info(7, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType);
 	info.m_pAttacker = pPlayer;
+	info.m_flDamage = GetDMOWpnData().m_iDamage;
 
 	// Fire the bullets, and force the first shot to be perfectly accuracy
 	pPlayer->FireBullets(info);

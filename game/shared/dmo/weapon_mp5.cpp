@@ -113,59 +113,53 @@ bool CWeaponMP5::Reload( )
 
 void CWeaponMP5::PrimaryAttack( void )
 {
-	const CDMOWeaponInfo &pWeaponInfo = GetDMOWpnData();
-	CDMOPlayer *pPlayer = GetPlayerOwner();
+	CDMOPlayer* pPlayer = GetPlayerOwner();
+	if (!pPlayer)
+		return;
 
-	float flCycleTime = pWeaponInfo.m_flCycleTime;
-
-	bool bPrimaryMode = true;
-
-	float flSpread = 0.01f;
-
-	// more spread when jumping
-	if ( !FBitSet( pPlayer->GetFlags(), FL_ONGROUND ) )
-		flSpread = 0.05f;
-	
-	pPlayer->m_iShotsFired++;
-
-	// Out of ammo?
-	if ( m_iClip1 <= 0 )
+	// don't fire underwater
+	if (pPlayer->GetWaterLevel() == 3)
 	{
-		if (m_bFireOnEmpty)
-		{
-			PlayEmptySound();
-			m_flNextPrimaryAttack = gpGlobals->curtime + 0.2;
-		}
+		PlayEmptySound();
+		m_flNextPrimaryAttack = gpGlobals->curtime + 0.15;
+		return;
 	}
 
-	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
-
-	m_iClip1--;
-
-	// player "shoot" animation
-	pPlayer->SetAnimation( PLAYER_ATTACK1 );
-
-	FX_FireBullets(
-		pPlayer->entindex(),
-		pPlayer->Weapon_ShootPosition(),
-		pPlayer->EyeAngles() + pPlayer->GetPunchAngle(),
-		GetWeaponID(),
-		bPrimaryMode?Primary_Mode:Secondary_Mode,
-		CBaseEntity::GetPredictionRandomSeed() & 255,
-		flSpread );
+	// MUST call sound before removing a round from the clip of a CMachineGun
+	WeaponSound(SINGLE);
 
 	pPlayer->DoMuzzleFlash();
-	
-	m_flNextPrimaryAttack = m_flNextSecondaryAttack = gpGlobals->curtime + flCycleTime;
 
-	if (!m_iClip1 && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0)
+	SendWeaponAnim(ACT_VM_PRIMARYATTACK);
+
+	// Don't fire again until fire animation has completed
+	m_flNextPrimaryAttack = gpGlobals->curtime + GetDMOWpnData().m_flCycleTime;
+	m_iClip1 -= 1;
+
+	// player "shoot" animation
+	pPlayer->SetAnimation(PLAYER_ATTACK1);
+
+
+	Vector	vecSrc = pPlayer->Weapon_ShootPosition();
+	Vector	vecAiming = pPlayer->GetAutoaimVector(AUTOAIM_10DEGREES);
+
+	FireBulletsInfo_t info(1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType);
+	info.m_pAttacker = pPlayer;
+	info.m_flDamage = GetDMOWpnData().m_iDamage;
+
+	// Fire the bullets, and force the first shot to be perfectly accuracy
+	pPlayer->FireBullets(info);
+
+
+	QAngle punch;
+	punch.Init(SharedRandomFloat("mp5pax", -0.5, -0.5), SharedRandomFloat("mp5pay", -0.5, 0.5), 0);
+	pPlayer->ViewPunch(punch);
+
+	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{
 		// HEV suit - indicate out of ammo condition
 		pPlayer->SetSuitUpdate("!HEV_AMO0", false, 0);
 	}
-
-	// start idle animation in 5 seconds
-	SetWeaponIdleTime( gpGlobals->curtime + 5.0 );
 }
 
 void CWeaponMP5::WeaponIdle()
