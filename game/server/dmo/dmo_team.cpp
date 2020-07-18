@@ -16,7 +16,7 @@
 IMPLEMENT_SERVERCLASS_ST(CDMOTeam, DT_DMOTeam)
 END_SEND_TABLE()
 
-LINK_ENTITY_TO_CLASS( sdk_team_manager, CDMOTeam );
+LINK_ENTITY_TO_CLASS( dmo_team_manager, CDMOTeam );
 
 //-----------------------------------------------------------------------------
 // Purpose: Get a pointer to the specified TF team manager

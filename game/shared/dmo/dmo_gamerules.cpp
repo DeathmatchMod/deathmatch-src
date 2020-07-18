@@ -39,7 +39,7 @@ BEGIN_NETWORK_TABLE_NOBASE( CDMOGameRules, DT_DMOGameRules )
 END_NETWORK_TABLE()
 
 
-LINK_ENTITY_TO_CLASS( sdk_gamerules, CDMOGameRulesProxy );
+LINK_ENTITY_TO_CLASS( dmo_gamerules, CDMOGameRulesProxy );
 IMPLEMENT_NETWORKCLASS_ALIASED( DMOGameRulesProxy, DT_DMOGameRulesProxy )
 
 
@@ -52,7 +52,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( DMOGameRulesProxy, DT_DMOGameRulesProxy )
 	}
 
 	BEGIN_RECV_TABLE( CDMOGameRulesProxy, DT_DMOGameRulesProxy )
-		RecvPropDataTable( "sdk_gamerules_data", 0, 0, &REFERENCE_RECV_TABLE( DT_DMOGameRules ), RecvProxy_DMOGameRules )
+		RecvPropDataTable( "dmo_gamerules_data", 0, 0, &REFERENCE_RECV_TABLE( DT_DMOGameRules ), RecvProxy_DMOGameRules )
 	END_RECV_TABLE()
 #else
 	void *SendProxy_DMOGameRules( const SendProp *pProp, const void *pStructBase, const void *pData, CSendProxyRecipients *pRecipients, int objectID )
@@ -64,7 +64,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( DMOGameRulesProxy, DT_DMOGameRulesProxy )
 	}
 
 	BEGIN_SEND_TABLE( CDMOGameRulesProxy, DT_DMOGameRulesProxy )
-		SendPropDataTable( "sdk_gamerules_data", 0, &REFERENCE_SEND_TABLE( DT_DMOGameRules ), SendProxy_DMOGameRules )
+		SendPropDataTable( "dmo_gamerules_data", 0, &REFERENCE_SEND_TABLE( DT_DMOGameRules ), SendProxy_DMOGameRules )
 	END_SEND_TABLE()
 #endif
 
@@ -133,7 +133,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( DMOGameRulesProxy, DT_DMOGameRulesProxy )
 		// Create the team managers
 		for ( int i = 0; i < ARRAYSIZE( sTeamNames ); i++ )
 		{
-			CTeam *pTeam = static_cast<CTeam*>(CreateEntityByName( "sdk_team_manager" ));
+			CTeam *pTeam = static_cast<CTeam*>(CreateEntityByName( "dmo_team_manager" ));
 			pTeam->Init( sTeamNames[i], i );
 
 			g_Teams.AddToTail( pTeam );

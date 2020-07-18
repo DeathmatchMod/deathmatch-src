@@ -54,7 +54,7 @@ public:
 	QAngle			m_LastAngles;
 };
 
-LINK_ENTITY_TO_CLASS( sdk_bot, CDMOBot );
+LINK_ENTITY_TO_CLASS( dmo_bot, CDMOBot );
 
 class CBotManager
 {
@@ -64,7 +64,7 @@ public:
 		// This tells it which edict to use rather than creating a new one.
 		CBasePlayer::s_PlayerEdict = pEdict;
 
-		CDMOBot *pPlayer = static_cast<CDMOBot *>( CreateEntityByName( "sdk_bot" ) );
+		CDMOBot *pPlayer = static_cast<CDMOBot *>( CreateEntityByName( "dmo_bot" ) );
 		if ( pPlayer )
 		{
 			pPlayer->SetPlayerName( playername );

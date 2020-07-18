@@ -113,7 +113,7 @@ public:
 	CNetworkVector( m_vecRagdollOrigin );
 };
 
-LINK_ENTITY_TO_CLASS( sdk_ragdoll, CDMORagdoll );
+LINK_ENTITY_TO_CLASS( dmo_ragdoll, CDMORagdoll );
 
 IMPLEMENT_SERVERCLASS_ST_NOBASE( CDMORagdoll, DT_DMORagdoll )
 	SendPropVector( SENDINFO(m_vecRagdollOrigin), -1,  SPROP_COORD ),
@@ -262,7 +262,7 @@ void CDMOPlayer::CreateRagdollEntity()
 	if ( !pRagdoll )
 	{
 		// create a new one
-		pRagdoll = dynamic_cast< CDMORagdoll* >( CreateEntityByName( "sdk_ragdoll" ) );
+		pRagdoll = dynamic_cast< CDMORagdoll* >( CreateEntityByName( "dmo_ragdoll" ) );
 	}
 
 	if ( pRagdoll )

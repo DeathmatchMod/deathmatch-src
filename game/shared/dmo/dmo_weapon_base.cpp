@@ -51,7 +51,7 @@ BEGIN_PREDICTION_DATA( CWeaponDMOBase )
 END_PREDICTION_DATA()
 #endif
 
-LINK_ENTITY_TO_CLASS( weapon_sdk_base, CWeaponDMOBase );
+LINK_ENTITY_TO_CLASS( weapon_dmo_base, CWeaponDMOBase );
 
 
 #ifdef GAME_DLL

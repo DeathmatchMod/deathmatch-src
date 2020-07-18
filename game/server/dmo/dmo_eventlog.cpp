@@ -25,7 +25,7 @@ public:
 			return true;
 		}
 	
-		if ( Q_strcmp(event->GetName(), "sdk_") == 0 )
+		if ( Q_strcmp(event->GetName(), "dmo_") == 0 )
 		{
 			return PrintDMOEvent( event );
 		}
@@ -37,7 +37,7 @@ protected:
 
 	bool PrintDMOEvent( IGameEvent * event )	// print Mod specific logs
 	{
-		//const char * name = event->GetName() + Q_strlen("sdk_"); // remove prefix
+		//const char * name = event->GetName() + Q_strlen("dmo_"); // remove prefix
 		return false;
 	}
 
