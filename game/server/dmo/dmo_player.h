@@ -10,7 +10,7 @@
 #pragma once
 
 
-#include "player.h"
+#include "basemultiplayerplayer.h"
 #include "server_class.h"
 #include "dmo_playeranimstate.h"
 #include "dmo_shareddefs.h"
@@ -19,10 +19,10 @@ class CWeaponDMOBase;
 //=============================================================================
 // >> DMO Game player
 //=============================================================================
-class CDMOPlayer : public CBasePlayer
+class CDMOPlayer : public CBaseMultiplayerPlayer
 {
 public:
-	DECLARE_CLASS( CDMOPlayer, CBasePlayer );
+	DECLARE_CLASS( CDMOPlayer, CBaseMultiplayerPlayer );
 	DECLARE_SERVERCLASS();
 	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
