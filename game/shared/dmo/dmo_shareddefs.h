@@ -69,8 +69,7 @@
 
 
 
-#define DMO_GAME_DESCRIPTION	"DMO Template mod v1"
-
+#define DMO_GAME_DESCRIPTION	"Deathmatch Mod"
 //================================================================================
 // Most elements below here are specific to the options above.
 //================================================================================
@@ -148,6 +147,7 @@ typedef enum
 	DMO_WEAPON_GRENADE,
 	DMO_WEAPON_PISTOL,
 	DMO_WEAPON_CROWBAR,
+	DMO_WEAPON_LASERSNIPER,
 
 	
 	WEAPON_MAX,		// number of weapons weapon index

@@ -30,6 +30,7 @@ class CDMOPlayer;
 #define AMMO_BULLETS			"AMMO_BULLETS"
 #define AMMO_ROCKETS			"AMMO_ROCKETS"
 #define AMMO_GRENADE			"AMMO_GRENADE"
+#define AMMO_CELLS				"Cells"
 
 
 typedef enum

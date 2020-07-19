@@ -57,6 +57,8 @@ $Project "Client (Deathmatch)"
 				$File "$SHARED\dmo\dmo_weapon_parse.cpp"
 				$File "$SHARED\dmo\dmo_weapon_parse.h"
 				
+				$File "$SHARED\dmo\dmo_te.h"
+				
 			}
 
 			$Folder	"Weapons"
@@ -77,6 +79,7 @@ $Project "Client (Deathmatch)"
 				$File "$SHARED\dmo\weapon_mp5.cpp"
 				$File "$SHARED\dmo\weapon_pistol.cpp"
 				$File "$SHARED\dmo\weapon_shotgun.cpp"
+				$File "$SHARED\dmo\weapon_lasersniper.cpp"
 				
 			}
 			
@@ -106,6 +109,8 @@ $Project "Client (Deathmatch)"
 			$File "dmo\clientmode_dmo.h"
 			$File "dmo\dmo_in_main.cpp"
 			$File "dmo\dmo_prediction.cpp"
+			
+			$File "dmo\c_te_lasersniperbeam.cpp"
 			
 		}
 	}

@@ -55,6 +55,7 @@ $Project "Server (Deathmatch)"
 				$File "$SHARED\dmo\dmo_weapon_parse.cpp"
 				$File "$SHARED\dmo\dmo_weapon_parse.h"
 				
+				$File "$SHARED\dmo\dmo_te.h"
 			}
 
 			$Folder	"Weapons"
@@ -75,6 +76,7 @@ $Project "Server (Deathmatch)"
 				$File "$SHARED\dmo\weapon_mp5.cpp"
 				$File "$SHARED\dmo\weapon_pistol.cpp"
 				$File "$SHARED\dmo\weapon_shotgun.cpp"
+				$File "$SHARED\dmo\weapon_lasersniper.cpp"
 				
 			}
 		
@@ -88,6 +90,8 @@ $Project "Server (Deathmatch)"
 			$File "dmo\dmo_playermove.cpp"
 			$File "dmo\dmo_team.cpp"
 			$File "dmo\dmo_team.h"
+			
+			$File "dmo\te_lasersniperbeam.cpp"
 			
 		}
 	}
