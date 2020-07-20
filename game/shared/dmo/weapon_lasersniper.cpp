@@ -16,7 +16,7 @@
 
 #define SNIPER_BEAM_SPRITE "sprites/bluelaser1.vmt"
 #define SNIPER_BEAM_WIDTH 5.0f
-#define SNIPER_BEAM_LIVE_TIME 0.75f
+#define SNIPER_BEAM_LIVE_TIME 0.45f
 
 class CWeaponLaserSniper : public CWeaponDMOBase
 {
@@ -83,33 +83,64 @@ void CWeaponLaserSniper::PrimaryAttack(void)
 	Vector vecEndPos = vecStartPos + vecAimDir * MAX_TRACE_LENGTH;
 
 	trace_t tr;
+	CBaseEntity* lastEnt = pPlayer;
 
-	UTIL_TraceLine(vecStartPos, vecEndPos, MASK_SOLID, pPlayer, COLLISION_GROUP_PLAYER, &tr);
+startFire:
+	UTIL_TraceLine(vecStartPos, vecEndPos, MASK_SOLID, lastEnt, COLLISION_GROUP_PLAYER, &tr);
 
 	if (tr.DidHit())
 	{
 
-
-		CBroadcastRecipientFilter filter;
-		filter.RemoveRecipient(pPlayer);
-		// MUST BE RAN ON OWNING CLIENT, BUT NOT SENT TO OWNER!!!!!!
-		TE_LaserSniperBeam(filter, pPlayer, 1, tr.endpos, SNIPER_BEAM_LIVE_TIME, SNIPER_BEAM_WIDTH);
-
-#ifdef DMO_SERVER
 		if (tr.DidHitNonWorldEntity())
 		{
+
+			
+			// We have to get our true end point on both the client and the server, but we can only damage on the server... 
+#ifdef DMO_SERVER
+			int iDamage = GetDMOWpnData().m_iDamage;
 			CTakeDamageInfo dmgInfo;
 			dmgInfo.SetAttacker(pPlayer);
 			dmgInfo.SetWeapon(this);
 
-			dmgInfo.SetDamage(GetDMOWpnData().m_iDamage);
-			dmgInfo.SetDamageType(DMG_DISSOLVE | DMG_ENERGYBEAM);
+			dmgInfo.SetDamage(iDamage);
+			dmgInfo.SetDamageType(DMG_ENERGYBEAM | DMG_ALWAYSGIB);
+			
+			//if (tr.m_pEnt->IsPlayer())
+			//	dmgInfo.SetDamageType(DMG_ALWAYSGIB);
 
-			tr.m_pEnt->TakeDamage(dmgInfo);
-		}
+			tr.m_pEnt->DispatchTraceAttack(dmgInfo, vecAimDir, &tr); 
+
 #endif
+			
+			// If we kill our hit ent, let's keep blasting through!
+			if (tr.m_pEnt->IsCombatCharacter() && !tr.m_pEnt->IsAlive())
+			{
+				lastEnt = tr.m_pEnt;
+				vecStartPos = tr.endpos;
+				goto startFire;
+			}
+		}
+
+
+
+
+
+		CBroadcastRecipientFilter filter;
+		// We don't send to the owner so that this code can be ran on the client and the beam can come from the viewmodel's muzzle
+		filter.RemoveRecipient(pPlayer);
+		TE_LaserSniperBeam(filter, pPlayer, 1, tr.endpos, SNIPER_BEAM_LIVE_TIME, SNIPER_BEAM_WIDTH);
+
 	}
 
-	m_flNextPrimaryAttack = gpGlobals->curtime + 1;
+	m_iClip1 -= 1;
+
+	WeaponSound(SINGLE);
+
+	pPlayer->SetAnimation(PLAYER_ATTACK1);
+	SendWeaponAnim(ACT_VM_PRIMARYATTACK);
+
+	float delayTime = gpGlobals->curtime + GetDMOWpnData().m_flCycleTime;
+	m_flNextPrimaryAttack = m_flNextSecondaryAttack = delayTime;
+	SetWeaponIdleTime(delayTime);
 }
 

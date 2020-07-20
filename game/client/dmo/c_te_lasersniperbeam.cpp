@@ -73,7 +73,7 @@ void TE_LaserSniperBeam( CBasePlayer* hOwnerPlayer, int iAttachmentIndex, const 
 	info.m_flWidth = width;
 	info.m_flEndWidth = width;
 	info.m_flFadeLength = 0;
-	info.m_flAmplitude = 0;
+	info.m_flAmplitude = 1;
 	info.m_flBrightness = 200.0;
 	info.m_flSpeed = 0;
 	info.m_nStartFrame = 0;
