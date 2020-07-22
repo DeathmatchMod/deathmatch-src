@@ -102,6 +102,11 @@ $Project "Client (Deathmatch)"
 				$File "dmo\vgui\vgui_rootpanel_dmo.h"
 			}
 
+			$Folder "Vehicles"
+			{
+			    $File "dmo\c_dmo_vehicle_test.cpp"
+			}
+
 			$File "dmo\c_dmo_player.cpp"
 			$File "dmo\c_dmo_player.h"
 			$File "dmo\c_dmo_team.cpp"

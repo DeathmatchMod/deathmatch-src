@@ -79,6 +79,11 @@ $Project "Server (Deathmatch)"
 				$File "$SHARED\dmo\weapon_lasersniper.cpp"
 				$File "$SHARED\dmo\weapon_blackhole.cpp"
 			}
+
+			$Folder "Vehicles"
+			{
+			    $File "dmo\dmo_vehicle_test.cpp"
+			}
 		
 			$File "dmo\dmo_bot_temp.cpp"
 			$File "dmo\dmo_bot_temp.h"

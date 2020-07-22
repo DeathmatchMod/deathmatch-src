@@ -20,6 +20,12 @@
 #endif
 
 #include "debugoverlay_shared.h"
+#include "beam_shared.h"
+
+#ifdef CLIENT_DLL
+#include "beamdraw.h"
+#include "iviewrender_beams.h"
+#endif
 
 ConVar sv_blackhole_accel("sv_blackhole_accel", "50000", FCVAR_ARCHIVE);
 ConVar sv_blackhole_speed("sv_blackhole_speed", "400", FCVAR_ARCHIVE);
@@ -72,6 +78,7 @@ void CBlackhole::Think()
 			NDebugOverlay::Sphere(this->GetAbsOrigin(), m_fRadius, 255, 0, 0, false, 0.0f);
 		}
 	}
+
 	m_fTotalLifetime += gpGlobals->frametime;
 	if(m_fTotalLifetime > sv_blackhole_lifetime.GetFloat()) this->Remove();
 }
