@@ -1,5 +1,5 @@
 #!/bin/bash
 
 pushd `dirname $0`
-devtools/bin/vpc /dmo /vscode /codelite /cmake +everything /mksln everything
+devtools/bin/vpc /dmo /cmake +everything /mksln everything
 popd
