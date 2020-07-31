@@ -81,6 +81,7 @@ $Project "Client (Deathmatch)"
 				$File "$SHARED\dmo\weapon_shotgun.cpp"
 				$File "$SHARED\dmo\weapon_lasersniper.cpp"
 				$File "$SHARED\dmo\weapon_blackhole.cpp"
+				$File "$SHARED\dmo\weapon_sawshot.cpp"
 				
 			}
 			

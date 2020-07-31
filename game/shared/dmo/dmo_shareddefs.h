@@ -148,6 +148,7 @@ typedef enum
 	DMO_WEAPON_PISTOL,
 	DMO_WEAPON_CROWBAR,
 	DMO_WEAPON_LASERSNIPER,
+	DMO_WEAPON_SAWSHOT,
 
 	
 	WEAPON_MAX,		// number of weapons weapon index
