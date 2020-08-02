@@ -21,6 +21,12 @@ $Configuration
 
 $Project "Client (Deathmatch)"
 {
+	$Folder "game_controls Header Files"
+	{
+		$File "game_controls\classmenu.h"
+		
+	}
+	
 	$Folder	"Source Files"
 	{
 		-$File	"$SHARED\weapon_parse_default.cpp"
@@ -33,6 +39,12 @@ $Project "Client (Deathmatch)"
 		
 		$File "$SHARED\Multiplayer\multiplayer_animstate.cpp"
 		$File "$SHARED\Multiplayer\multiplayer_animstate.h"
+
+
+		$Folder "game_controls"
+		{
+			$File "game_controls\classmenu.cpp"			
+		}
 		
 		$Folder	"Deathmatch"
 		{
