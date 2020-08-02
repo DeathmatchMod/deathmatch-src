@@ -218,10 +218,14 @@ void CDMOPlayer::Spawn()
 	SetModel( DMO_PLAYER_MODEL );
 	SetMoveType( MOVETYPE_WALK );
 	RemoveSolidFlags( FSOLID_NOT_SOLID );
-
+	
 	m_hRagdoll = NULL;
 	
 	BaseClass::Spawn();
+
+	GiveAmmo(90, "Cells");
+	GiveNamedItem("weapon_lasersniper");
+	GiveNamedItem("weapon_sawshot");
 }
 
 void CDMOPlayer::InitialSpawn( void )
@@ -236,7 +240,7 @@ void CDMOPlayer::InitialSpawn( void )
 	data->SetString( "title", title );		// info panel title
 	data->SetString( "type", "1" );			// show userdata from stringtable entry
 	data->SetString( "msg",	"motd" );		// use this stringtable entry
-	data->SetInt( "cmd", TEXTWINDOW_CMD_IMPULSE101 );// exec this command if panel closed
+	data->SetInt( "cmd", TEXTWINDOW_CMD_CLOSED_HTMLPAGE);// exec this command if panel closed
 	data->SetBool( "unload", sv_motd_unload_on_dismissal.GetBool() );
 
 	ShowViewPortPanel( PANEL_INFO, true, data );
@@ -321,11 +325,17 @@ void CDMOPlayer::CreateViewModel( int index /*=0*/ )
 
 void CDMOPlayer::CheatImpulseCommands( int iImpulse )
 {
+	if (!sv_cheats->GetBool())
+	{
+		return;
+	}
+
 	if ( iImpulse != 101 )
 	{
 		BaseClass::CheatImpulseCommands( iImpulse );
 		return ;
 	}
+	
 	gEvilImpulse101 = true;
 
 	EquipSuit();
